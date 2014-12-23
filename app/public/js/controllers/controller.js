@@ -4,8 +4,10 @@ var togglePlayControllers = angular.module('togglePlayControllers', []);
 
 togglePlayControllers.controller('togglePlayCtrl', ['$scope','$http',
   function ($scope,$http) {
-	console.log("ici");
+	  /*console.log($scope);*/
 	$scope.appname="salut";
+	console.log(location);
+	$scope.hash = encodeURIComponent("/"+window.location.hash);
 
 	$scope.insertInDatabase = function(){
 		$http({method: 'GET', url: '/api/application'}).

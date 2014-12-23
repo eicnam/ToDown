@@ -1,18 +1,23 @@
 var express    = require('express');
 var bodyParser = require('body-parser');
+var cookieParser = require('cookie-parser');
 var app        = express(); 
 var passport = require("passport");
 var TwitterStrategy = require("passport-twitter").Strategy;
+var session = require('express-session');
+var mongoose = require('mongoose');
+var Application = require('./models/application');
 
 var TWITTER_CONSUMER_KEY = "7gvGiNP4gTDNql7IXwf2FIGTv";
 var TWITTER_CONSUMER_SECRET = "2TQAD5HRtokFiO9wvKB6bF2noHqZOmiz1RShWRUjGmcYUUDJp0";
 
 app.use(express.static(__dirname+"/public"));
 app.use(bodyParser());
-app.use(express.cookieParser());
-app.use(express.session({secret: 'SECRET'}));
+app.use(cookieParser());
+app.use(session({secret: 'SECRET'}));
 app.use(passport.initialize());
 app.use(passport.session()); 
+/*app.value('retrurnurl', { url: '/profile' });*/
 
 passport.use( new TwitterStrategy({
 	consumerKey: TWITTER_CONSUMER_KEY,
@@ -20,35 +25,62 @@ passport.use( new TwitterStrategy({
 	callbackURL: "/auth/twitter/callback"
 	},
 	function(token,tokenSecret,profile,done){
-		process.nextTick(function(){
+		/*process.nextTick(function(){*/
+		/*console.log(profile);*/
+		/*console.log(done);*/
+		/*$scope.appname='toto';*/
 		return done(null,profile);
-	});
-}
-));
+	})
+);
 
 var port = process.env.PORT || 8080; 
 var router = express.Router(); 
 
-var mongoose = require('mongoose');
 mongoose.connect('mongodb://toggle:toggle@ds049868.mongolab.com:49868/toggle');
-var Application = require('./models/application');
 
+// used to serialize the user for the session
+passport.serializeUser(function(user, done) {
+	done(null, user.id);
+});
+
+// used to deserialize the user
+passport.deserializeUser(function(id, done) {
+	done(null, id);
+});
 
 router.use(function(req, res, next) {
 	//her we log everything
 	/*app.use(express.logger('dev'));	*/
-	console.log('Something is happening.');
+	console.log('Something is happening on the server.');
+	/*console.log(req);*/
 	next();
 });
 
 router.route('/auth/twitter')
-	.get(passport.authenticate('twitter'));
+.get(function(req, res, next) {
+	// If this function gets called, authentication was successful.
+	// `req.user` contains the authenticated user.
+	console.log(req.query);
+	req.session.returnto=req.query.returnto;
+	console.log(req.session);
+	/*console.log(next);*/
+	next();
+	/*res.redirect('/profile');*/
+}, passport.authenticate('twitter'));
 
 router.route('/auth/twitter/callback')
   .get(passport.authenticate('twitter', { 
-	successRedirect: '/',
-	failureRedirect: '/login'
-  }));
+	  /*successRedirect: '/profile',*/
+	  failureRedirect: '/login'
+  }),function(req,res){
+	  /*console.log(req);*/
+	console.log(req.query);
+	var url = req.session.returnto;
+	/*console.log(req.get('Referrer'));*/
+	/*console.log(req.get('content-type'));*/
+	console.log(req.session);
+	res.redirect(url);
+  });
 
 router.route('/api/application')
 	//this is a test : add a new application in the mongo database
@@ -74,17 +106,21 @@ router.route('/api/application')
 	      });
       });
 
-router.route('/login')
+router.route('/profile')
 	.get(function(req, res){
-		res.json({log: 'useq'});
+		/*console.log(req);*/
+		res.json({data : req.user});
 	}
 );
+
 
 router.route('/')
 	.get(function(req, res) {
 		/*res.redirect('../index.html');*/
 		//her we'll send the home page
 		/*res.json({ message: 'hooray! welcome to our api!' });	*/
+		/*$scope.appname = 'toto';*/
+		res.set('appname', 'toto');
 		res.sendfile('public/index.html');
 	});
 	      var application = new Application(); 

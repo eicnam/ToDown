@@ -5,6 +5,7 @@
   "dependencies": {
     "angular": "1.2.x",
     "angular-route": "~1.2.x",
-    "angular-resource": "~1.2.x"
+    "angular-resource": "~1.2.x",
+    "paper-elements": "Polymer/paper-elements#~0.5.2"
   }
 }
