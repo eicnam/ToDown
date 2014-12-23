@@ -8,7 +8,7 @@ togglePlayApp.config(['$routeProvider',
   function($routeProvider) {
     $routeProvider.
       when('/la', {
-        templateUrl: 'views/partials/partial1.html',
+        templateUrl: 'views/partials/content.html',
         controller: 'togglePlayCtrl'
       }).
       when('/home', {

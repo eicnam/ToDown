@@ -1,20 +1,84 @@
 <!doctype html>
 <html ng-app="togglePlayApp">
-<head>
-  <meta charset="utf-8">
-  <title>TogglePlay</title>
-  <script src="bower_components/angular/angular.js"></script>
-  <script src="bower_components/angular-route/angular-route.js"></script>
-  <script src="bower_components/webcomponentsjs/webcomponents.min.js"></script>
-  <link rel="import" href="bower_components/paper-button/paper-button.html">
+	<head>
+		<meta charset="utf-8">
+		<title>TogglePlay</title>
 
-  <script src="js/app.js"></script>
-  <script src="js/controllers/controller.js"></script>
+		<script src="bower_components/angular/angular.js"></script>
+		<script src="bower_components/angular-route/angular-route.js"></script>
+		<script src="bower_components/webcomponentsjs/webcomponents.min.js"></script>
 
-</head>
-<body>
 
-<div ng-view></div>
-</body>
+		<link rel="import" href="bower_components/paper-button/paper-button.html">
+		<link rel="import" href="bower_components/core-toolbar/core-toolbar.html">
+		<link rel="import" href="bower_components/core-menu/core-menu.html">
+		<link rel="import" href="bower_components/core-item/core-item.html">
+		<link rel="import" href="bower_components/core-header-panel/core-header-panel.html">
+		<link rel="import" href="bower_components/core-drawer-panel/core-drawer-panel.html">
+		<link rel="import" href="bower_components/core-scaffold/core-scaffold.html">
+		<link rel="import" href="bower_components/polymer/polymer.html">
+		<link rel="import" href="bower_components/core-icon-button/core-icon-button.html">
+		<link rel="import" href="views/partials/card.html">
+
+		<script src="js/app.js"></script>
+		<script src="js/controllers/controller.js"></script>
+		<style>
+		html,body {
+			height: 100%;
+			margin: 0;
+			background-color: #E5E5E5;
+			font-family: 'RobotoDraft', sans-serif;
+		}
+		core-header-panel {
+			height: 100%;
+			overflow: auto;
+			-webkit-overflow-scrolling: touch;
+		}
+		core-toolbar {
+			background: #03a9f4;
+			color: white;
+		}
+		#tabs {
+			width: 100%;
+			margin: 0;
+			-webkit-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			user-select: none;
+			text-transform: uppercase;
+		}
+		.container {
+			width: 80%;
+			margin: 50px auto;
+		}
+		@media (min-width: 481px) {
+			#tabs {
+				width: 200px;
+			}
+			.container {
+				width: 400px;
+			}
+		}
+		</style>
+	</head>
+	<body unresolved>
+		<core-scaffold>
+
+			<core-header-panel navigation flex>
+				<core-toolbar id="navheader">
+					<span>Menu</span>
+				</core-toolbar>
+				<core-menu>
+					<core-item label="One"></core-item>
+					<core-item label="Two"></core-item>
+				</core-menu>
+			</core-header-panel>
+
+			<span tool>Title</span>
+
+			<div ng-view></div>
+		</core-scaffold>
+
+	</body>
 </html>
 
