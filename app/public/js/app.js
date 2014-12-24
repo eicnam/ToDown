@@ -11,9 +11,6 @@ togglePlayApp.config(['$routeProvider',
         templateUrl: 'views/partials/content.html',
         controller: 'togglePlayCtrl'
       }).
-      when('/home', {
-        templateUrl: 'views/home.html'
-      }).
       otherwise({
         redirectTo: '/la'
       });

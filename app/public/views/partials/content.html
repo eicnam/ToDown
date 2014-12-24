@@ -1,4 +1,5 @@
 <div class="content">
+	
 	<p>Nothing here {{appname}}</p>
 	<form action="/api/application" method="get">
 		<button type="submit" value="submit">Button not using angular directive</button>
@@ -7,12 +8,25 @@
 	<form>
 		<button ng-click="insertInDatabase()">Button using angular directive</button>
 	</form>
-	<a href="/auth/twitter?returnto={{hash}}">Sign in with Twitter</a>
 	<paper-button raised>flat button</paper-button>
+	
+	
+	<div layout="row" ng-repeat="t in 'ab'" flex>
+		<div layout="column" ng-repeat="t in 'abc'" flex>
 
-	<post-card>
-	<!--<img width="70" height="70" src="../images/avatar-07.svg">-->
-		<h2>Another Developer</h2>
-		<p>I'm composing with shadow DOM!</p>
-	</post-card>
+			<md-card>
+				<h2>Paracosm</h2>
+				<p>
+					The titles of Washed Out's breakthrough song and the first single from Paracosm share the
+					two most important words in Ernest Greene's musical language: feel it. It's a simple request, as well...
+				</p>
+				<a href="/auth/twitter?returnto={{hash}}">Sign in with Twitter</a>
+			</md-card>
+			
+			<!--<md-card class="card" data-ng-repeat="photo in photoColumn">-->
+			<!--<img ng-src="{{photo.path}}">-->
+			<!--</md-card>-->
+		</div>
+	</div>
+
 </div>
