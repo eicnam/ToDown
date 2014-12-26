@@ -1,17 +1,22 @@
 'use strict';
 
-var togglePlayApp = angular.module('togglePlayApp', [
+var app = angular.module('toDownApp', [
   'ngRoute',
-  'togglePlayControllers'
+  'ngMaterial'
 ]);
-togglePlayApp.config(['$routeProvider',
+
+app.config(['$routeProvider',
   function($routeProvider) {
-    $routeProvider.
-      when('/la', {
-        templateUrl: 'views/partials/content.html',
-        controller: 'togglePlayCtrl'
-      }).
-      otherwise({
-        redirectTo: '/la'
+    $routeProvider
+      .when('/', {
+        templateUrl: 'views/partials/content.html'
+      /*controller: 'ToDownCtrl'*/
+      })
+      .when('/search', {
+        templateUrl: 'views/partials/gridFilms.html'
+	/*controller: 'FilmCtrl'*/
+      })
+      .otherwise({
+        redirectTo: '/'
       });
   }]);

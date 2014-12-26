@@ -5,8 +5,6 @@ var app        = express();
 var passport = require("passport");
 var TwitterStrategy = require("passport-twitter").Strategy;
 var session = require('express-session');
-var mongoose = require('mongoose');
-var Application = require('./models/application');
 
 var TWITTER_CONSUMER_KEY = "7gvGiNP4gTDNql7IXwf2FIGTv";
 var TWITTER_CONSUMER_SECRET = "2TQAD5HRtokFiO9wvKB6bF2noHqZOmiz1RShWRUjGmcYUUDJp0";
@@ -35,8 +33,6 @@ passport.use( new TwitterStrategy({
 
 var port = process.env.PORT || 8080; 
 var router = express.Router(); 
-
-mongoose.connect('mongodb://toggle:toggle@ds049868.mongolab.com:49868/toggle');
 
 // used to serialize the user for the session
 passport.serializeUser(function(user, done) {
@@ -82,30 +78,6 @@ router.route('/auth/twitter/callback')
 	res.redirect(url);
   });
 
-router.route('/api/application')
-	//this is a test : add a new application in the mongo database
-      .get(function(req, res) {
-      
-	      application.name = "hey";
-
-	      application.save(function(err) {
-			if (err)
-				res.send(err);
-			res.json({ message: 'Application created!' });
-	      });
-      })
-      .post(function(req, res) {
-      
-	      var application = new Application(); 
-	      application.name = "hey";
-
-	      application.save(function(err) {
-			if (err)
-				res.send(err);
-			res.json({ message: 'Application created!' });
-	      });
-      });
-
 router.route('/profile')
 	.get(function(req, res){
 		/*console.log(req);*/
@@ -123,7 +95,6 @@ router.route('/')
 		res.set('appname', 'toto');
 		res.sendfile('public/index.html');
 	});
-	      var application = new Application(); 
 
 app.use('/', router);
 app.listen(port);

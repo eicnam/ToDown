@@ -1,5 +1,5 @@
 <!doctype html>
-<html ng-app="togglePlayApp">
+<html ng-app="toDownApp">
 	<head>
 		<meta charset="utf-8">
 		<title>ToDown</title>
@@ -37,6 +37,9 @@
 
 		<script src="js/app.js"></script>
 		<script src="js/controllers/controller.js"></script>
+		<script src="js/directives/directives.js"></script>
+		<script src="js/services/services.js"></script>
+		<script src="js/factories/factories.js"></script>
 		<!--<style>-->
 <!--html,body {-->
 	<!--height: 100%;-->
@@ -79,37 +82,47 @@
 		<body unresolved>
 
 
-		<div ng-controller="AppCtrl" layout="column" layout-fill>
+		<div ng-controller="ToDownCtrl" layout="column" layout-fill>
 			<section layout="row" flex>
+				<!--drawer-->
 				<md-sidenav class="md-sidenav-left md-whiteframe-z2" md-component-id="left" md-is-locked-open="$media('gt-md')">
 					<md-toolbar class="md-theme-indigo">
-						<h1 class="md-toolbar-tools">Sidenav Left</h1>
+						<h1 class="md-toolbar-tools" flex layout="column">
+							<img src="img/icons/ic_whatshot_48px.svg"/>
+							ToDown
+						</h1>
 					</md-toolbar>
-					<md-content class="md-padding" ng-controller="LeftCtrl">
+					<md-content class="md-padding">
 						<p hide-md show-gt-md>
-							This sidenav is locked open on your device. To go back to the default behavior,
-							narrow your display.
+							Un menu;
 						</p>
 					</md-content>
 				</md-sidenav>
+				<!--content-->
 				<md-content flex>
 					<md-toolbar>
-						<h2 class="md-toolbar-tools">
-							<span>Toolbar</span>
-						</h2>
+						<div class="md-toolbar-tools">
+							<md-button ng-click="search = false" aria-label="Search" ng-show="search">
+								<md-icon icon="img/icons/ic_search_24px.svg" style="width: 24px; height: 24px;" ></md-icon>
+							</md-button>
+							<md-text-float ng-model="searchWord" ng-show="search" ng-keypress="research($event)"></md-text-float>
+							<span flex ng-show="search"></span>
+							<h2 ng-show="!search">
+								<span>Accueil</span>
+							</h2>
+							<span flex ng-show="!search"></span>
+							<md-button  href="/auth/twitter?returnto={{hash}}" aria-label="Search" ng-show="!search">
+								<md-icon icon="img/icons/ic_perm_contact_cal_24px.svg" style="width: 24px; height: 24px;"></md-icon>
+							</md-button>
+							<md-button ng-click="search = true" aria-label="Search" ng-show="!search">
+								<md-icon icon="img/icons/ic_search_24px.svg" style="width: 24px; height: 24px;"></md-icon>
+							</md-button>
+						</div>
 					</md-toolbar>
 
 					<md-content flex class="md-padding">
 						<div layout="column" layout-fill layout-align="center center">
-							<p>
-								The left sidenav will 'lock open' on a medium (>=960px wide) device.
-							</p>
-							<div>
-								<md-button ng-click="toggleLeft()" class="md-primary">
-									Toggle left
-								</md-button>
-								<div ng-view></div>
-							</div>
+							<div ng-view></div>
 						</div>
 					</md-content>
 				</md-content>
