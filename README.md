@@ -1,5 +1,5 @@
 #ToDown
----
+
 ToDown is a website that uses FreeBase as source of data
 
 ## Description
@@ -10,6 +10,8 @@ Later you will be able to share your "cards" with other peoples.
 ## Installation
 
 ```
+sudo apt-get install nodejs
+npm install -g bower
 cd app/
 npm install
 cd public/
