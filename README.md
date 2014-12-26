@@ -10,7 +10,7 @@ Later you will be able to share your "cards" with other peoples.
 ## Installation
 
 ```
-sudo apt-get install nodejs
+sudo apt-get install nodejs npm
 npm install -g bower
 cd app/
 npm install
