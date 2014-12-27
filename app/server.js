@@ -10,11 +10,18 @@ var TWITTER_CONSUMER_KEY = "7gvGiNP4gTDNql7IXwf2FIGTv";
 var TWITTER_CONSUMER_SECRET = "2TQAD5HRtokFiO9wvKB6bF2noHqZOmiz1RShWRUjGmcYUUDJp0";
 
 app.use(express.static(__dirname+"/public"));
-app.use(bodyParser());
+app.use(bodyParser.urlencoded({
+	        extended: true
+}));
+app.use(bodyParser.json());
 app.use(cookieParser());
-app.use(session({secret: 'SECRET'}));
+app.use(session({
+	        secret: '<mysecret>',
+	        saveUninitialized: true,
+	        resave: true
+}));
 app.use(passport.initialize());
-app.use(passport.session()); 
+app.use(passport.session());
 /*app.value('retrurnurl', { url: '/profile' });*/
 
 passport.use( new TwitterStrategy({
@@ -31,7 +38,6 @@ passport.use( new TwitterStrategy({
 	})
 );
 
-var port = process.env.PORT || 8080; 
 var router = express.Router(); 
 
 // used to serialize the user for the session
@@ -97,6 +103,9 @@ router.route('/')
 	});
 
 app.use('/', router);
-app.listen(port);
-console.log('Server is running on port ' + port);
+var ipaddress = process.env.OPENSHIFT_NODEJS_IP || "127.0.0.1";
+var port = process.env.OPENSHIFT_NODEJS_PORT || 8080;
+app.listen( port, ipaddress, function() {
+	        console.log((new Date()) + 'Server is running on port ' + port);
+});
 

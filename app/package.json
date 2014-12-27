@@ -1,5 +1,5 @@
 {
-    "name": "Toggle-Play",
+    "name": "ToDown",
     "version": "0.0.1",
     "private": true,
     "dependencies": {
@@ -10,7 +10,8 @@
 	"body-parser":"latest",
 	"passport":"latest",
 	"passport-twitter":"latest",
-	"cookie-parser": "latest"
+	"cookie-parser": "latest",
+	"express-session": "latest"
     }
 }
 
