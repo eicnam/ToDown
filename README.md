@@ -33,7 +33,8 @@ node server.js
 - MQL requests
 - Twitter OAuth
 - Freebase API
-- Firebase or Mongo or 
+- Firebase or Mongo or (didn't choose at this time)  
+- OpenShift 
 
 ## Future upgrades  
 
