@@ -22,7 +22,6 @@ app.use(session({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
-/*app.value('retrurnurl', { url: '/profile' });*/
 
 passport.use( new TwitterStrategy({
 	consumerKey: TWITTER_CONSUMER_KEY,
@@ -31,9 +30,7 @@ passport.use( new TwitterStrategy({
 	},
 	function(token,tokenSecret,profile,done){
 		/*process.nextTick(function(){*/
-		/*console.log(profile);*/
 		/*console.log(done);*/
-		/*$scope.appname='toto';*/
 		return done(null,profile);
 	})
 );
@@ -53,8 +50,7 @@ passport.deserializeUser(function(id, done) {
 router.use(function(req, res, next) {
 	//her we log everything
 	/*app.use(express.logger('dev'));	*/
-	console.log('Something is happening on the server.');
-	/*console.log(req);*/
+	console.log('Request recieved.');
 	next();
 });
 
@@ -62,12 +58,9 @@ router.route('/auth/twitter')
 .get(function(req, res, next) {
 	// If this function gets called, authentication was successful.
 	// `req.user` contains the authenticated user.
-	console.log(req.query);
+	/*console.log(req.query);*/
 	req.session.returnto=req.query.returnto;
-	console.log(req.session);
-	/*console.log(next);*/
 	next();
-	/*res.redirect('/profile');*/
 }, passport.authenticate('twitter'));
 
 router.route('/auth/twitter/callback')
@@ -75,37 +68,33 @@ router.route('/auth/twitter/callback')
 	  /*successRedirect: '/profile',*/
 	  failureRedirect: '/login'
   }),function(req,res){
-	  /*console.log(req);*/
+	console.log("query");
 	console.log(req.query);
 	var url = req.session.returnto;
-	/*console.log(req.get('Referrer'));*/
-	/*console.log(req.get('content-type'));*/
+	console.log("session");
 	console.log(req.session);
 	res.redirect(url);
   });
 
 router.route('/profile')
 	.get(function(req, res){
-		/*console.log(req);*/
 		res.json({data : req.user});
+		//TODO redirect on a true page
 	}
 );
 
 
 router.route('/')
 	.get(function(req, res) {
-		/*res.redirect('../index.html');*/
-		//her we'll send the home page
-		/*res.json({ message: 'hooray! welcome to our api!' });	*/
-		/*$scope.appname = 'toto';*/
-		res.set('appname', 'toto');
+		//her we send the home page
 		res.sendfile('public/index.html');
 	});
 
 app.use('/', router);
+
 var ipaddress = process.env.OPENSHIFT_NODEJS_IP || "127.0.0.1";
 var port = process.env.OPENSHIFT_NODEJS_PORT || 8080;
 app.listen( port, ipaddress, function() {
-	        console.log((new Date()) + 'Server is running on port ' + port);
+	console.log((new Date()) + 'Server is running on port ' + port);
 });
 

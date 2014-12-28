@@ -18,7 +18,6 @@ app.factory('lookupFactory', function(freebaseService){
 
 			return freebaseService.lookup(factory.query)
 				.then(function(dataReturnByThePromise) {
-					/*console.log(dataReturnByThePromise.data.result);*/
 					return dataReturnByThePromise.data.result;
 				});
 		}
