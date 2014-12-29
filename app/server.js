@@ -29,8 +29,10 @@ passport.use( new TwitterStrategy({
 	callbackURL: "/auth/twitter/callback"
 	},
 	function(token,tokenSecret,profile,done){
+		/*console.log(token);*/
+		/*console.log(tokenSecret);*/
+		/*console.log(profile);*/
 		/*process.nextTick(function(){*/
-		/*console.log(done);*/
 		return done(null,profile);
 	})
 );
@@ -44,21 +46,31 @@ passport.serializeUser(function(user, done) {
 
 // used to deserialize the user
 passport.deserializeUser(function(id, done) {
+	//we search the user with his id
 	done(null, id);
 });
+
+// Define a middleware function to be used for every secured routes
+var auth = function(req, res, next){
+	if (!req.isAuthenticated())
+		res.send(401);
+		/*res.redirect("/#/profile");*/
+	else
+		next();
+};
+
 
 router.use(function(req, res, next) {
 	//her we log everything
 	/*app.use(express.logger('dev'));	*/
 	console.log('Request recieved.');
+	console.log(req);
 	next();
 });
 
 router.route('/auth/twitter')
 .get(function(req, res, next) {
-	// If this function gets called, authentication was successful.
-	// `req.user` contains the authenticated user.
-	/*console.log(req.query);*/
+	//before sending 
 	req.session.returnto=req.query.returnto;
 	next();
 }, passport.authenticate('twitter'));
@@ -66,28 +78,49 @@ router.route('/auth/twitter')
 router.route('/auth/twitter/callback')
   .get(passport.authenticate('twitter', { 
 	  /*successRedirect: '/profile',*/
-	  failureRedirect: '/login'
+	  failureRedirect: '/'
   }),function(req,res){
-	console.log("query");
-	console.log(req.query);
-	var url = req.session.returnto;
-	console.log("session");
-	console.log(req.session);
-	res.redirect(url);
+	//after sending
+	//req.user is set
+	  /*console.log(req.user);*/
+	if (req.session.returnto == '/')
+		res.redirect("/#/profile");
+	else
+		res.redirect("/#"+req.session.returnto);
   });
 
-router.route('/profile')
-	.get(function(req, res){
-		res.json({data : req.user});
-		//TODO redirect on a true page
-	}
-);
+// route to test if the user is logged in or not
+app.get('/loggedin', function(req, res) {
+	res.send(req.isAuthenticated() ? req.user : '0');
+});
 
+
+app.get('/logout', auth, function(req, res){
+	req.logout();
+	if (req.session.returnto == '/#/profile')
+		res.redirect("/#/");
+	else
+		res.redirect("/#"+req.session.returnto);
+});
+
+// RESTFULL API
+router.route('/films')
+	.get(function(req, res) {
+		res.json();
+	}
+});
+
+router.route('/users')
+	.get(function(req, res) {
+		res.json();
+	}
+});
 
 router.route('/')
 	.get(function(req, res) {
 		//her we send the home page
-		res.sendfile('public/index.html');
+		/*res.sendfile('public/index.html');*/
+		res.render('public/index');
 	});
 
 app.use('/', router);
@@ -95,6 +128,6 @@ app.use('/', router);
 var ipaddress = process.env.OPENSHIFT_NODEJS_IP || "127.0.0.1";
 var port = process.env.OPENSHIFT_NODEJS_PORT || 8080;
 app.listen( port, ipaddress, function() {
-	console.log((new Date()) + 'Server is running on port ' + port);
+	console.log((new Date()) + ' Server is running on port ' + port);
 });
 

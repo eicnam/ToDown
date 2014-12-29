@@ -7,23 +7,23 @@ ToDown is a website that uses FreeBase as source of data
 This website provide you an interface to search informations about movies and keep this infos into some "cards".  
 Later you will be able to share your "cards" with other peoples.
 
-## Installation
+## Install and launch
 
 ```
 sudo apt-get install nodejs npm
+git clone https://github.com/eicnam/ToDown.git
+cd ToDown/
 npm install -g bower
 cd app/
 npm install
 cd public/
 bower install
-```
-
-## Launch the project
-
-```
-cd app/
+cd ..
 node server.js
+http://localhost:8080
 ```
+!! in some cases you have to launch "nodejs" instead of "node"
+
 
 ## Technologies used 
 

@@ -10,6 +10,7 @@
 
 		<script src="bower_components/hammerjs/hammer.js"></script>
 		<script src="bower_components/angular/angular.js"></script>
+		<script src="bower_components/angular-resource/angular-resource.js"></script>
 		<script src="bower_components/angular-route/angular-route.js"></script>
 		<!--<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.0/angular-animate.js"></script>	-->
 		<script src="bower_components/angular-aria/angular-aria.js"></script>
@@ -71,7 +72,7 @@
 								<span>Accueil</span>
 							</h2>
 							<span flex></span>
-							<md-button href="/auth/twitter?returnto={{hash}}" aria-label="Search">
+							<md-button ng-click="redirect()" aria-label="Connect">
 								<md-icon icon="img/icons/ic_perm_contact_cal_24px.svg" style="width: 24px; height: 24px;"></md-icon>
 							</md-button>
 							<md-button ng-click="search = true" aria-label="Search">

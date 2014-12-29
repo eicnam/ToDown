@@ -9,7 +9,10 @@ app.controller('ToDownCtrl', function($scope, $http, $timeout, $mdSidenav, $log,
 		});
 	};
 
-	$scope.hash = encodeURIComponent("/"+window.location.hash);
+	$scope.redirect = function(){
+		var urlTwitter = "/auth/twitter?returnto="+$location.url(); 
+		window.location.assign(urlTwitter);
+	};
 
 	$scope.research = function(keyEvent) {
 		if (keyEvent.which === 13){
@@ -26,3 +29,10 @@ app.controller('ToDownCtrl', function($scope, $http, $timeout, $mdSidenav, $log,
 	};
 });
 
+app.controller('ProfileCtrl', function($rootScope, $scope, $http) {
+	
+	$scope.username = "salut";
+	console.log($rootScope);
+	
+
+});
