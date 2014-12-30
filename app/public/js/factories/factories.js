@@ -1,4 +1,4 @@
-app.factory('lookupFactory', function(freebaseService){
+app.factory('freebaseFactory', function(freebaseService){
 	var factory = {
 		
 		query : [{

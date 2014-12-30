@@ -24,6 +24,12 @@
 			<img src="">image</img>
 			<h3>{{film.name}}</h3>
 			<p>date sortie DVD</p>
+			<div ng-if="location == 'search'">
+				<a ng-click="addFilm(1)">Add in my movies</a>
+			</div>
+			<div ng-if="location == 'filmUser'">
+				<a ng-click="removeFilm(1)">Remove from my movies </a>
+			</div>
 
 		</md-card>
 	</div>

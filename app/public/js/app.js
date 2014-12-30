@@ -32,13 +32,18 @@ app.config(function($routeProvider, $locationProvider, $httpProvider) {
 	};
 
 	//the interceptor
-	$httpProvider.interceptors.push(function($q, $location) {
+	$httpProvider.interceptors.push(function($q, $location, $rootScope) {
 		return {
 			'responseError': function (rejection) {
 				// Error: check the error status to get only the 401
 				console.log('Failed with', rejection.status, 'status');
 				if (rejection.status == 401) {
 					//user is not loggedin
+					$location.url('/');
+				}
+				if (rejection.status == 404) {
+					$rootScope.message = 'Page not found';
+					//page not found 
 					$location.url('/');
 				}
 				return $q.reject(rejection);
@@ -48,11 +53,12 @@ app.config(function($routeProvider, $locationProvider, $httpProvider) {
 
 	$routeProvider
 	.when('/', {
-		templateUrl: 'views/partials/content.html'
-		/*controller: 'ToDownCtrl'*/
+		templateUrl: 'views/partials/content.html',
+		controller: 'HomeCtrl'
 	})
 	.when('/search', {
-		templateUrl: 'views/partials/gridFilms.html'
+		templateUrl: 'views/partials/gridFilms.html',
+		controller: 'SearchCtrl'
 	})
 	.when('/profile', {
 		templateUrl: 'views/partials/profile.html',
@@ -61,6 +67,10 @@ app.config(function($routeProvider, $locationProvider, $httpProvider) {
 		resolve: {
 			loggedin: checkLoggedin
 		}
+	})
+	.when('/films', {
+		templateUrl: 'views/partials/gridFilms.html',
+		controller: 'FilmsUserCtrl'
 	})
 	.otherwise({
 		redirectTo: '/'

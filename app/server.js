@@ -5,6 +5,7 @@ var app        = express();
 var passport = require("passport");
 var TwitterStrategy = require("passport-twitter").Strategy;
 var session = require('express-session');
+var mongoose = require('mongoose');
 
 var TWITTER_CONSUMER_KEY = "7gvGiNP4gTDNql7IXwf2FIGTv";
 var TWITTER_CONSUMER_SECRET = "2TQAD5HRtokFiO9wvKB6bF2noHqZOmiz1RShWRUjGmcYUUDJp0";
@@ -22,6 +23,16 @@ app.use(session({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
+
+// Database connection
+mongoose.connect('mongodb://todown:todown@ds029901.mongolab.com:29901/todown');
+
+// Models
+require('./models/User');
+require('./models/Film');
+
+var User = mongoose.model('User');
+var Film = mongoose.model('Film');
 
 passport.use( new TwitterStrategy({
 	consumerKey: TWITTER_CONSUMER_KEY,
@@ -63,14 +74,14 @@ var auth = function(req, res, next){
 router.use(function(req, res, next) {
 	//her we log everything
 	/*app.use(express.logger('dev'));	*/
-	console.log('Request recieved.');
-	console.log(req);
+	console.log('Request recieved : ' + req.url);
 	next();
 });
 
 router.route('/auth/twitter')
 .get(function(req, res, next) {
 	//before sending 
+	//we save the page the user were before login
 	req.session.returnto=req.query.returnto;
 	next();
 }, passport.authenticate('twitter'));
@@ -83,6 +94,7 @@ router.route('/auth/twitter/callback')
 	//after sending
 	//req.user is set
 	  /*console.log(req.user);*/
+	  /*console.log(req.session);*/
 	if (req.session.returnto == '/')
 		res.redirect("/#/profile");
 	else
@@ -103,18 +115,33 @@ app.get('/logout', auth, function(req, res){
 		res.redirect("/#"+req.session.returnto);
 });
 
-// RESTFULL API
+// RESTFUL API
 router.route('/films')
 	.get(function(req, res) {
-		res.json();
-	}
-});
+		res.json( 
+			[{
+				name : "monFilm1"
+			},{
+				name : "monFilm2"
+			},{
+				name : "monFilm3"
+			}]
+		);
+	})
+	.post(function(req, res) {
+		console.log("post films");
+		console.log(req.body);
+		res.json("OK");
+	});
 
 router.route('/users')
 	.get(function(req, res) {
-		res.json();
-	}
-});
+		res.json({
+			name : "dreaser",
+			imageUrl:"url"
+		});
+	});
+
 
 router.route('/')
 	.get(function(req, res) {

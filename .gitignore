@@ -28,4 +28,6 @@ bower_components
 # Users Environment Variables
 .lock-wscript
 
+# Temp files
 *~
+*.swp
