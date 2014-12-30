@@ -41,18 +41,23 @@
 				<!--drawer-->
 				<md-sidenav class="md-sidenav-left md-whiteframe-z2" md-component-id="left" md-is-locked-open="$media('gt-md')">
 					<md-toolbar class="md-theme-indigo">
-						<a href="#/">
-							<h1 class="md-toolbar-tools" flex layout="column">
-								<img src="img/icons/ic_whatshot_48px.svg"/>
-								ToDown
-							</h1>
+						<a ng-click="closeLeft()" href="#/">
+							<div class="md-toolbar-tools">
+								<img href="/" src="img/icons/ic_whatshot_48px.svg"/>
+								<h3>ToDown</h3>
+								<span flex></span>
+								<!--<md-button ng-click="toggleLeft()" aria-label="Toggle menu">-->
+								<!--<md-icon icon="img/icons/ic_search_24px.svg" style="width: 24px; height: 24px;" ></md-icon>-->
+								<!--</md-button>-->
+							</div>
 						</a>
+
 					</md-toolbar>
 					<md-content>
 						<div layout="column" layout-fill>
 							<div layout="row" layout-fill>
 								<!--possible classes : menu-sub-item md-menu-item ng-scope"-->
-								<md-button class="menu-item" href="#/films" flex>
+								<md-button ng-click="closeLeft()" class="menu-item" href="#/films" flex>
 									Mes films
 								</md-button>
 							</div>
@@ -63,6 +68,9 @@
 				<div layout="column" layout-fill>
 					<md-toolbar layout="column">
 						<div ng-show="search" class="md-toolbar-tools" layout="column" flex>
+							<md-button hide-gt-md ng-click="toggleLeft()" aria-label="Toggle menu">
+								<md-icon icon="img/icons/ic_menu_24px.svg" style="width: 24px; height: 24px;" ></md-icon>
+							</md-button>
 							<md-button ng-click="search = false" aria-label="Search">
 								<md-icon icon="img/icons/ic_search_24px.svg" style="width: 24px; height: 24px;" ></md-icon>
 							</md-button>
@@ -70,6 +78,10 @@
 							<span flex></span>
 						</div>
 						<div ng-hide="search" class="md-toolbar-tools" layout="column" flex>
+
+							<md-button hide-gt-md ng-click="toggleLeft()" aria-label="Toggle menu">
+								<md-icon icon="img/icons/ic_menu_24px.svg" style="width: 24px; height: 24px;" ></md-icon>
+							</md-button>
 							<h2>
 								<span>Accueil</span>
 							</h2>

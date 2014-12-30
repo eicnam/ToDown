@@ -3,10 +3,11 @@
 app.controller('ToDownCtrl', function($rootScope, $scope, $http, $timeout, $mdSidenav, $mdToast, $log, $location, freebaseFactory) {
 	
 	$scope.toggleLeft = function() {
-		$mdSidenav('left').toggle()
-		.then(function(){
-			$log.debug("toggle left is done");
-		});
+		$mdSidenav('left').toggle();
+	};
+
+	$scope.closeLeft = function() {
+		$mdSidenav('left').close();
 	};
 
 	$scope.redirect = function(){
