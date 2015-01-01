@@ -31,7 +31,7 @@ mongoose.connect('mongodb://todown:todown@ds029901.mongolab.com:29901/todown');
 require('./models/User');
 require('./models/Film');
 
-var User = mongoose.model('User');
+var Users = mongoose.model('Users');
 var FilmsUsers = mongoose.model('FilmsUsers');
 
 passport.use( new TwitterStrategy({
@@ -95,9 +95,15 @@ router.route('/auth/twitter/callback')
 	//req.user is set
 	  /*console.log(req.user);*/
 	  /*console.log(req.session);*/
+	Users.update({"id_user":req.user.id},{"id_user":req.user.id},{upsert: true}, function(err,num) {
+		if (err)
+			res.send(err);
+		console.log("post user");
+		/*res.json('User created !');*/
+		res.redirect("/#/loggedin");
+	});
 	
 	//we redirect on /login set a vaiable an the client side and redirect again on the previous page
-	res.redirect("/#/loggedin");
 
 	/*if (req.session.returnto == '/')*/
 	/*res.redirect("/#/profile");*/
@@ -135,11 +141,7 @@ router.route('/films')
 		});
 	})
 	.post(function(req, res) {
-		var film = new FilmsUsers();
-		film.id_freebase = req.body.idFilm;
-		film.id_user = req.user; 
-
-		film.save(function(err) {
+		FilmsUsers.update({"id_freebase":req.body.idFilm}, {"id_freebase": req.body.idFilm, "id_user": req.user} ,{upsert: true}, function(err, num) {
 			if (err)
 				res.send(err);
 			console.log("post films");
@@ -149,9 +151,24 @@ router.route('/films')
 
 router.route('/users')
 	.get(function(req, res) {
-		res.json({
-			name : "dreaser",
-			imageUrl:"url"
+		Users.find({ 'id_user': req.user}, function (err, docs) {
+			// docs is an array
+			/*console.log(docs);*/
+			if (err)
+				res.send(err);
+			console.log("user infos : ");
+			console.log(docs);
+			console.log(req.user);
+			res.json(docs);
+		});
+	})
+	.post(function(req, res) {
+		Users.update({"id_user":req.user},{"id_user":req.user},{upsert: true}, function(err,num) {
+			if (err)
+				res.send(err);
+			console.log("post user");
+			/*res.json('User created !');*/
+			res.redirect("/#/loggedin");
 		});
 	});
 

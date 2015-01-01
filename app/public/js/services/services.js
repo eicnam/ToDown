@@ -60,7 +60,7 @@ app.service('FilmUserService',function($http){
 // manage users 
 app.service('UserService',function($http){
 
-	//if no parameters, get me
+	//if no parameters, get the current user
 	this.getUser = function(){
 
 		return $http.get('/users')
@@ -72,3 +72,4 @@ app.service('UserService',function($http){
 			});
 	}
 });
+

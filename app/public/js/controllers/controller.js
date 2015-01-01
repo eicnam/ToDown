@@ -73,6 +73,8 @@ app.controller('ProfileCtrl', function($rootScope, $scope, $http, UserService) {
 	$scope.location = "profile";
 
 	UserService.getUser().then(function(result){
+		console.log("UserInfo : ");
+		console.log(result.data);
 		$scope.userInfo = result.data;	
 	},
 	function(rejection){
@@ -117,6 +119,10 @@ app.controller('FilmsUserCtrl', function($rootScope, $scope, $http, FilmUserServ
 	$scope.location = "filmUser";
 
 	FilmUserService.getFilms().then(function(result){
+		console.log(result.data);
+		//TODO transforme id_freebase into readable film
+			// do this with a factory ? 
+			// notice that a film should have a id_freebase even after the transformation
 		$scope.films = result.data;
 	},
 	function(rejection){

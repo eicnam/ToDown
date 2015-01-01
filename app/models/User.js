@@ -1,11 +1,10 @@
 var mongoose = require('mongoose');
 
-var UserSchema = new mongoose.Schema({
+var UsersSchema = new mongoose.Schema({
+	id_user: String,
 	username: String,
-    	url:String,
-	salt:String,
-	hash:String
+    	url:String
 });
 
-mongoose.model('User', UserSchema);
+mongoose.model('Users', UsersSchema);
 
