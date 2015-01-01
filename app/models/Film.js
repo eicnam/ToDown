@@ -1,9 +1,10 @@
 var mongoose = require('mongoose');
 
-var FilmSchema = new mongoose.Schema({
-	id_freebase: String
+var FilmsUsersSchema = new mongoose.Schema({
+	id_freebase: String,
+    	id_user: String
 });
 
 
-mongoose.model('Film', FilmSchema);
+module.exports = mongoose.model('FilmsUsers', FilmsUsersSchema);
 

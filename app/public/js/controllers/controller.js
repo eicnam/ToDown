@@ -2,6 +2,8 @@
 
 app.controller('ToDownCtrl', function($rootScope, $scope, $http, $timeout, $mdSidenav, $mdToast, $log, $location, freebaseFactory) {
 	
+	$rootScope.isAuthenticated = false;
+
 	$scope.toggleLeft = function() {
 		$mdSidenav('left').toggle();
 	};
@@ -71,10 +73,40 @@ app.controller('ProfileCtrl', function($rootScope, $scope, $http, UserService) {
 	$scope.location = "profile";
 
 	UserService.getUser().then(function(result){
-		$scope.userInfo = response;	
+		$scope.userInfo = result.data;	
 	},
 	function(rejection){
-		console.log("Error on getting films");
+		console.log("Error on getting user");
+	});
+
+});
+
+
+app.controller('LoggedInCtrl', function($rootScope, $scope, $http, $location, UserService) {
+
+	$scope.location = "loggedin";
+
+	// Make an AJAX call to check if the user is logged in
+	$http.get('/loggedin').success(function(data, status, headers, config){
+		console.log(data);
+		// Authenticated
+		if (data.user!== '0'){
+			$rootScope.isAuthenticated = true;
+			if (data.returnto == '/')
+				$location.url("/profile");
+			else
+				$location.url(data.returnto);
+
+		}
+		// Not Authenticated
+		else {
+			$rootScope.isAuthenticated = false;
+			/*if (data.returnto == '/profile')*/
+			/*$location.url("/");*/
+			/*else*/
+			$location.url(data.returnto);
+		}
+
 	});
 
 });
@@ -98,7 +130,7 @@ app.controller('FilmsUserCtrl', function($rootScope, $scope, $http, FilmUserServ
 					console.log("Film removed from my list");
 			})
 			.catch(function(fallback){
-				console.log("Error on a film");
+				console.log("Error on removing a film");
 			});
 	}
 });

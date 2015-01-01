@@ -32,7 +32,7 @@ require('./models/User');
 require('./models/Film');
 
 var User = mongoose.model('User');
-var Film = mongoose.model('Film');
+var FilmsUsers = mongoose.model('FilmsUsers');
 
 passport.use( new TwitterStrategy({
 	consumerKey: TWITTER_CONSUMER_KEY,
@@ -95,43 +95,56 @@ router.route('/auth/twitter/callback')
 	//req.user is set
 	  /*console.log(req.user);*/
 	  /*console.log(req.session);*/
-	if (req.session.returnto == '/')
-		res.redirect("/#/profile");
-	else
-		res.redirect("/#"+req.session.returnto);
+	
+	//we redirect on /login set a vaiable an the client side and redirect again on the previous page
+	res.redirect("/#/loggedin");
+
+	/*if (req.session.returnto == '/')*/
+	/*res.redirect("/#/profile");*/
+	/*else*/
+	/*res.redirect("/#"+req.session.returnto);*/
   });
 
 // route to test if the user is logged in or not
 app.get('/loggedin', function(req, res) {
-	res.send(req.isAuthenticated() ? req.user : '0');
+	console.log("loggedin : returnto : " + req.session.returnto);
+	console.log("id_user : " + req.user);
+	res.send(req.isAuthenticated() ? { "user":req.user, "returnto": req.session.returnto}: { "user":'0', "returnto": req.session.returnto});
 });
 
 
 app.get('/logout', auth, function(req, res){
 	req.logout();
-	if (req.session.returnto == '/#/profile')
-		res.redirect("/#/");
-	else
-		res.redirect("/#"+req.session.returnto);
+
+	res.redirect("/#/loggedin");
+	/*if (req.session.returnto == '/#/profile')*/
+	/*res.redirect("/#/");*/
+	/*else*/
+	/*res.redirect("/#"+req.session.returnto);*/
 });
 
 // RESTFUL API
 router.route('/films')
-	.get(function(req, res) {
-		res.json( 
-			[{
-				name : "monFilm1"
-			},{
-				name : "monFilm2"
-			},{
-				name : "monFilm3"
-			}]
-		);
+	.get(auth, function(req, res) {
+		FilmsUsers.find({ 'id_user': req.user }, function (err, docs) {
+			// docs is an array
+			/*console.log(docs);*/
+			if (err)
+				res.send(err);
+			res.json(docs);
+		});
 	})
 	.post(function(req, res) {
-		console.log("post films");
-		console.log(req.body);
-		res.json("OK");
+		var film = new FilmsUsers();
+		film.id_freebase = req.body.idFilm;
+		film.id_user = req.user; 
+
+		film.save(function(err) {
+			if (err)
+				res.send(err);
+			console.log("post films");
+			res.json('Film created !');
+		});
 	});
 
 router.route('/users')

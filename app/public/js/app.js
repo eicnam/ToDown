@@ -14,15 +14,15 @@ app.config(function($routeProvider, $locationProvider, $httpProvider) {
 	      var deferred = $q.defer();
 
 	      // Make an AJAX call to check if the user is logged in
-	      $http.get('/loggedin').success(function(user){
+	      $http.get('/loggedin').success(function(data){
 		
 		// Authenticated
-		if (user !== '0'){
+		if (data.user !== '0'){
 		  $timeout(deferred.resolve, 0);
 		}
 		// Not Authenticated
 		else {
-		  $rootScope.message = 'You need to log in.';
+		  $rootScope.message = 'You need to log in';
 		  $timeout(function(){deferred.reject();}, 0);
 		  $location.url('/');
 		}
@@ -36,14 +36,15 @@ app.config(function($routeProvider, $locationProvider, $httpProvider) {
 		return {
 			'responseError': function (rejection) {
 				// Error: check the error status to get only the 401
-				console.log('Failed with', rejection.status, 'status');
+				/*console.log('Failed with', rejection.status, 'status');*/
 				if (rejection.status == 401) {
 					//user is not loggedin
+					$rootScope.message = 'You need to log in';
 					$location.url('/');
 				}
 				if (rejection.status == 404) {
-					$rootScope.message = 'Page not found';
 					//page not found 
+					$rootScope.message = 'Page not found';
 					$location.url('/');
 				}
 				return $q.reject(rejection);
@@ -68,9 +69,17 @@ app.config(function($routeProvider, $locationProvider, $httpProvider) {
 			loggedin: checkLoggedin
 		}
 	})
+	.when('/loggedin', {
+		templateUrl: 'views/partials/profile.html',
+		controller: 'LoggedInCtrl'
+	})
 	.when('/films', {
 		templateUrl: 'views/partials/gridFilms.html',
-		controller: 'FilmsUserCtrl'
+		controller: 'FilmsUserCtrl',
+		//this is a secure root
+		resolve: {
+			loggedin: checkLoggedin
+		}
 	})
 	.otherwise({
 		redirectTo: '/'
