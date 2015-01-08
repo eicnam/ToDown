@@ -12,7 +12,7 @@ var TWITTER_CONSUMER_SECRET = "2TQAD5HRtokFiO9wvKB6bF2noHqZOmiz1RShWRUjGmcYUUDJp
 
 app.use(express.static(__dirname+"/public"));
 app.use(bodyParser.urlencoded({
-	        extended: true
+	extended: true
 }));
 app.use(bodyParser.json());
 app.use(cookieParser());
@@ -25,7 +25,12 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // Database connection
-mongoose.connect('mongodb://todown:todown@ds029901.mongolab.com:29901/todown');
+mongoose.connect('mongodb://todown:todown@ds029901.mongolab.com:29901/todown', function(err) {
+	if (err){
+		console.log("ERROR while connecting the database");
+		throw err;
+	}
+});
 
 // Models
 require('./models/User');
@@ -162,15 +167,15 @@ router.route('/users')
 			res.json(docs);
 		});
 	})
-	.post(function(req, res) {
-		Users.update({"id_user":req.user},{"id_user":req.user},{upsert: true}, function(err,num) {
-			if (err)
-				res.send(err);
-			console.log("post user");
-			/*res.json('User created !');*/
-			res.redirect("/#/loggedin");
-		});
-	});
+/*.post(function(req, res) {*/
+/*Users.update({"id_user":req.user},{"id_user":req.user},{upsert: true}, function(err,num) {*/
+/*if (err)*/
+/*res.send(err);*/
+/*console.log("post user");*/
+/**//*res.json('User created !');*/
+/*res.redirect("/#/loggedin");*/
+/*});*/
+/*});*/
 
 
 router.route('/')

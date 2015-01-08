@@ -1,7 +1,13 @@
 app.factory('freebaseFactory', function(freebaseService){
 	var factory = {
 		
+		/*"optional": "forbidden",*/
 		query : [{
+			"id": null,
+			"/common/topic/image": [{
+				"id": null,
+				"optional": "optional"
+			}],
 			"name~=": "", 
 			"name": null,
 			"/film/film/release_date_s": [{
