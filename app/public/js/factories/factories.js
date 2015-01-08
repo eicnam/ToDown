@@ -18,10 +18,23 @@ app.factory('freebaseFactory', function(freebaseService){
 			"type": "/film/film"
 		}],
 
-		getFilmInfo : function(searchedWord){
+		getFilmInfoByName : function(searchedWord){
 
 			factory.query[0]['name~='] = searchedWord+"*";
+			factory.query[0]['id'] = null;
 
+			return freebaseService.lookup(factory.query)
+				.then(function(dataReturnByThePromise) {
+					return dataReturnByThePromise.data.result;
+				});
+		},
+
+		getFilmInfoById : function(id_freebase){
+
+			factory.query[0]['id'] = id_freebase;
+			factory.query[0]['name~='] = "*";
+
+			/*console.log(factory.query);*/
 			return freebaseService.lookup(factory.query)
 				.then(function(dataReturnByThePromise) {
 					return dataReturnByThePromise.data.result;
@@ -30,3 +43,4 @@ app.factory('freebaseFactory', function(freebaseService){
 	};
 	return factory;
 })
+

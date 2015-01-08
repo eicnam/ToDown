@@ -150,7 +150,7 @@ router.route('/films')
 			if (err)
 				res.send(err);
 			console.log("post films");
-			res.json('Film created !');
+			res.json('OK');
 		});
 	});
 

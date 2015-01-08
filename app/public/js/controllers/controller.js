@@ -19,7 +19,7 @@ app.controller('ToDownCtrl', function($rootScope, $scope, $http, $timeout, $mdSi
 
 	$scope.research = function(keyEvent) {
 		if (keyEvent.which === 13){
-			freebaseFactory.getFilmInfo($scope.searchWord)
+			freebaseFactory.getFilmInfoByName($scope.searchWord)
 				.then(function(objectTreatedByTheFactory){
 					console.log(objectTreatedByTheFactory);
 					$scope.films = objectTreatedByTheFactory;
@@ -114,7 +114,7 @@ app.controller('LoggedInCtrl', function($rootScope, $scope, $http, $location, Us
 });
 
 
-app.controller('FilmsUserCtrl', function($rootScope, $scope, $http, FilmUserService) {
+app.controller('FilmsUserCtrl', function($rootScope, $scope, $http, FilmUserService, freebaseFactory) {
 	
 	$scope.location = "filmUser";
 
@@ -123,7 +123,27 @@ app.controller('FilmsUserCtrl', function($rootScope, $scope, $http, FilmUserServ
 		//TODO transforme id_freebase into readable film
 			// do this with a factory ? 
 			// notice that a film should have a id_freebase even after the transformation
-		$scope.films = result.data;
+		console.log("mes films");
+		console.log(result.data);
+
+		$scope.films =  [];
+		var filmsOnDatabase = result.data;
+
+		angular.forEach(filmsOnDatabase, function(film) {
+			freebaseFactory.getFilmInfoById(film.id_freebase)
+				.then(function(objectTreatedByTheFactory){
+					/*console.log(objectTreatedByTheFactory);*/
+					$scope.films.push(objectTreatedByTheFactory[0]);
+
+					console.log("films apres fabrique");
+					console.log($scope.films);
+				})
+				.catch(function(fallback){
+					console.log("error");
+				});
+		});
+		
+
 	},
 	function(rejection){
 		console.log("Error on getting films");

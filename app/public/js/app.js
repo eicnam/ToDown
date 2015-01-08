@@ -42,11 +42,13 @@ app.config(function($routeProvider, $locationProvider, $httpProvider) {
 					$rootScope.message = 'You need to log in';
 					$location.url('/');
 				}
-				if (rejection.status == 404) {
-					//page not found 
-					$rootScope.message = 'Page not found';
-					$location.url('/');
-				}
+				/*if (rejection.status == 404) {*/
+				/*//page not found */
+				/*console.log("rejection");*/
+				/*console.log(rejection);*/
+				/*$rootScope.message = 'Page not found';*/
+				/*$location.url('/');*/
+				/*}*/
 				return $q.reject(rejection);
 			}
 		};
