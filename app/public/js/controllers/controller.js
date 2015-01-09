@@ -152,8 +152,14 @@ app.controller('FilmsUserCtrl', function($rootScope, $scope, $http, FilmUserServ
 	$scope.removeFilm = function(idFilm){
 		FilmUserService.removeFilm(idFilm)
 			.then(function(objectReturnediByThePromise){
-				if (objectReturnediByThePromise.data == "OK" ) 
+				if (objectReturnediByThePromise.data == "OK" ) {
 					console.log("Film removed from my list");
+					angular.forEach($scope.films, function(film, key) {
+						if(film.id==idFilm){
+							$scope.films.splice(key,1); 
+						}
+					});
+				}
 			})
 			.catch(function(fallback){
 				console.log("Error on removing a film");

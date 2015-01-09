@@ -155,7 +155,6 @@ router.route('/films')
 	})
 	//here we use put because the delete methode can't take body params and our id are strings with slashes
 	.put(auth, function(req, res) {
-		//TODO take care about req.user
 		FilmsUsers.remove({"id_freebase":req.body.idFilm, "id_user":req.user}, function(err, num) {
 			if (err)
 				res.send(err);
