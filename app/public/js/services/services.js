@@ -33,16 +33,17 @@ app.service('FilmUserService',function($http){
         };
 
 	this.removeFilm = function(idFilm){
-
-		return "OK";
-		/*return $http.post('/films', {"idFilm":idFilm})*/
-		/*.success(function(data, status, headers, config){*/
-		/*if( data == "OK" ) */
-		/*console.log("postFilm");*/
-		/*})  */
-		/*.error(function(data, status, headers, config) { */
-		/*console.log("Error on adding a film"); */
-		/*}); */
+		console.log(idFilm);
+		return $http.put('/films', {"idFilm":idFilm})
+			.success(function(data, status, headers, config){
+				if( data == "OK" ) {
+					console.log("deleteFilm");
+					//TODO supprimer du scope
+				}
+			})  
+			.error(function(data, status, headers, config) { 
+				console.log("Error on deleting a film"); 
+			}); 
         };
 
         this.getFilms = function(){
