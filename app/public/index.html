@@ -55,12 +55,13 @@
 					</md-toolbar>
 					<md-content>
 						<div layout="column" layout-fill>
-							<div layout="row" layout-fill>
 								<!--possible classes : menu-sub-item md-menu-item ng-scope"-->
 								<md-button ng-if="isAuthenticated" ng-click="closeLeft()" class="menu-item" href="#/films" flex>
 									Mes films
 								</md-button>
-							</div>
+								<md-button ng-if="isAuthenticated" href="/logout" class="menu-item" flex>
+									Déconnexion
+								</md-button>
 						</div>
 					</md-content>
 				</md-sidenav>
@@ -86,8 +87,11 @@
 								<span>Accueil</span>
 							</h2>
 							<span flex></span>
-							<md-button ng-click="redirect()" aria-label="Connect">
+							<md-button ng-if="!isAuthenticated" ng-click="redirect()" aria-label="Connect">
 								<md-icon icon="img/icons/ic_perm_contact_cal_24px.svg" style="width: 24px; height: 24px;"></md-icon>
+							</md-button>
+							<md-button ng-if="isAuthenticated" href="#/profile" aria-label="Connect">
+								<md-icon icon="img/icons/ic_account_circle_24px.svg" style="width: 24px; height: 24px;"></md-icon>
 							</md-button>
 							<md-button ng-click="search = true" aria-label="Search">
 								<md-icon icon="img/icons/ic_search_24px.svg" style="width: 24px; height: 24px;"></md-icon>
