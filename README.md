@@ -31,7 +31,6 @@ http://localhost:8080
 - Express
 - AngularJS
 - NodeJS
-  
 - Angular Material
 - Twitter OAuth
 - Freebase API
