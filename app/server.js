@@ -7,8 +7,8 @@ var TwitterStrategy = require("passport-twitter").Strategy;
 var session = require('express-session');
 var mongoose = require('mongoose');
 
-var TWITTER_CONSUMER_KEY = "7gvGiNP4gTDNql7IXwf2FIGTv";
-var TWITTER_CONSUMER_SECRET = "2TQAD5HRtokFiO9wvKB6bF2noHqZOmiz1RShWRUjGmcYUUDJp0";
+var TWITTER_CONSUMER_KEY = "lcEOKX6CKoE1Csh3gMJKPfsaQ";
+var TWITTER_CONSUMER_SECRET = "bWWM5nifxZjEpnpNfn7K8QIZNYwO7fRlHzSPGqQJfOXW4icNyd";
 
 app.use(express.static(__dirname+"/public"));
 app.use(bodyParser.urlencoded({
@@ -100,7 +100,7 @@ router.route('/auth/twitter/callback')
 	//req.user is set
 	  /*console.log(req.user);*/
 	  /*console.log(req.session);*/
-	Users.update({"id_user":req.user.id},{"id_user":req.user.id},{upsert: true}, function(err,num) {
+	Users.update({"id_user":req.user.id, "displayName":req.user.displayName, "photo": req.user.photos[0].value},{"id_user":req.user.id},{upsert: true}, function(err,num) {
 		if (err)
 			res.send(err);
 		console.log("post user");
@@ -173,7 +173,7 @@ router.route('/users')
 			console.log("user infos : ");
 			console.log(docs);
 			console.log(req.user);
-			res.json(docs);
+			res.json(docs[0]);
 		});
 	})
 /*.post(function(req, res) {*/

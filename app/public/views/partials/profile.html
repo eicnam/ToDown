@@ -1,4 +1,6 @@
-{{userInfo}}
-
-<h3> username : {{userInfo.name}}</h3>
-
+<md-card>
+	<img ng-src="{{userInfo.photo}}" alt="profile picture"/>
+	<p> username : {{userInfo.displayName}}</p>
+	<p> id_user: {{userInfo.id_user}}</p>
+	<!--<p>{{userInfo}}</p>-->
+</md-card>

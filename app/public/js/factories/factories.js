@@ -12,8 +12,9 @@ app.factory('freebaseFactory', function(freebaseService){
 			"name": null,
 			"/film/film/release_date_s": [{
 				"release_date": null,
-				"film_release_region": "France",
-				"film_release_distribution_medium": null
+				"film_release_region": null, 
+				"film_release_distribution_medium": null,
+				"sort": "release_date"
 				}],
 			"type": "/film/film"
 		}],
