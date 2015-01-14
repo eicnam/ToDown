@@ -27,13 +27,14 @@ http://localhost:8080
 
 ## Technologies used 
 
-- NodeJS
+- MongoDB (hosted on MongoLab)
+- Express
 - AngularJS
+- NodeJS
+  
 - Angular Material
-- MQL requests
 - Twitter OAuth
 - Freebase API
-- MongoDB (hosted on MongoLab)
 - OpenShift (NodeJS host)
 
 ## Future upgrades  
