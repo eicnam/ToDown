@@ -4,7 +4,7 @@ ToDown is a website that uses FreeBase as source of data
 
 ## Description
 
-This website provide you an interface to search informations about movies and keep this infos into some "cards".  
+This website provide you an interface to search informations about movies and save this infos into "cards".  
 Later you will be able to share your "cards" with other peoples.
 
 ## Install and launch
@@ -33,8 +33,8 @@ http://localhost:8080
 - MQL requests
 - Twitter OAuth
 - Freebase API
-- Firebase or Mongo or (didn't choose at this time)  
-- OpenShift 
+- MongoDB (hosted on MongoLab)
+- OpenShift (NodeJS host)
 
 ## Future upgrades  
 
