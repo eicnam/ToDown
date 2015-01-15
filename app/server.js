@@ -6,6 +6,8 @@ var passport = require("passport");
 var TwitterStrategy = require("passport-twitter").Strategy;
 var session = require('express-session');
 var mongoose = require('mongoose');
+var nodemailer = require('nodemailer');
+var transporter = nodemailer.createTransport();
 
 var TWITTER_CONSUMER_KEY = "lcEOKX6CKoE1Csh3gMJKPfsaQ";
 var TWITTER_CONSUMER_SECRET = "bWWM5nifxZjEpnpNfn7K8QIZNYwO7fRlHzSPGqQJfOXW4icNyd";
@@ -118,8 +120,8 @@ router.route('/auth/twitter/callback')
 
 // route to test if the user is logged in or not
 app.get('/loggedin', function(req, res) {
-	console.log("loggedin : returnto : " + req.session.returnto);
-	console.log("id_user : " + req.user);
+	/*console.log("loggedin : returnto : " + req.session.returnto);*/
+	/*console.log("id_user : " + req.user);*/
 	res.send(req.isAuthenticated() ? { "user":req.user, "returnto": req.session.returnto}: { "user":'0', "returnto": req.session.returnto});
 });
 
@@ -146,7 +148,7 @@ router.route('/films')
 		});
 	})
 	.post(auth, function(req, res) {
-		FilmsUsers.update({"id_freebase":req.body.idFilm}, {"id_freebase": req.body.idFilm, "id_user": req.user} ,{upsert: true}, function(err, num) {
+		FilmsUsers.update({"id_freebase": req.body.idFilm, "id_user": req.user, "warn_date": "2015-01-15"} ,{"id_freebase":req.body.idFilm}, {upsert: true}, function(err, num) {
 			if (err)
 				res.send(err);
 			console.log("post film");
@@ -170,12 +172,43 @@ router.route('/users')
 			/*console.log(docs);*/
 			if (err)
 				res.send(err);
-			console.log("user infos : ");
-			console.log(docs);
-			console.log(req.user);
+		/*console.log("user infos : ");*/
+		/*console.log(docs);*/
+		/*console.log(req.user);*/
 			res.json(docs[0]);
 		});
 	})
+
+router.route('/cron')
+	.get(function(req, res) {
+		FilmsUsers.find({'warn_date': '2015-01-15'}, function (err, docs) {
+			if (err)
+				res.send(err);
+			docs.forEach(function(item) { 
+				console.log(item.id_user);
+				Users.find({'id_user': item.id_user}, function (err, docs) {
+					if (err)
+						res.send(err);
+					transporter.sendMail({
+						from: 'blablanumerodeux@gmail.com',
+						to: 'blablanumerodeux@gmail.com',
+						subject: 'hello',
+						text: 'hello world!'
+					},function(error, info){
+						if(error){
+							console.log(error);
+						}else{
+							console.log('Message sent: ' + info.response);
+						}
+					
+					});
+					console.log(docs[0]);
+				});
+			})
+			res.json(docs);
+		});
+	})
+
 /*.post(function(req, res) {*/
 /*Users.update({"id_user":req.user},{"id_user":req.user},{upsert: true}, function(err,num) {*/
 /*if (err)*/

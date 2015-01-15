@@ -1,17 +1,17 @@
 {
-    "name": "ToDown",
-    "version": "0.0.1",
-    "private": true,
-    "dependencies": {
-	"express": "~4.0.0",
-        "mongoose": "3.8.9",
-        "http-server": "^0.6.1",
-        "bower": "^1.3.1",
-	"body-parser":"latest",
-	"passport":"latest",
-	"passport-twitter":"latest",
-	"cookie-parser": "latest",
-	"express-session": "latest"
-    }
+  "name": "ToDown",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "body-parser": "latest",
+    "bower": "^1.3.1",
+    "cookie-parser": "latest",
+    "express": "~4.0.0",
+    "express-session": "latest",
+    "http-server": "^0.6.1",
+    "mongoose": "3.8.9",
+    "nodemailer": "^1.3.0",
+    "passport": "latest",
+    "passport-twitter": "latest"
+  }
 }
-
