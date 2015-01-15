@@ -5,7 +5,6 @@ ToDown is a website that uses FreeBase as source of data
 ## Description
 
 This website provide you an interface to search informations about movies and save this infos into "cards".  
-Later you will be able to share your "cards" with other peoples.
 
 ## Install and launch
 
@@ -38,4 +37,9 @@ http://localhost:8080
 
 ## Future upgrades  
 
-One of the features we really want to add is a reminder when a movie is now available into DVD or BluRay.
+Later you will be able to share your "cards" with other peoples.  
+One of the features we really want to add is a reminder when a movie is now available into DVD or BluRay. To do this there is 4 possible ways : 
+- First the server scan all the movies in your cards and warn you if there is a new release.  
+- An other way is to wait 3 months (or more) after the theater release and warn the user.  
+- The user can also trigger himself the scan for new releases
+- And finaly, you can wait 3 months after the add of the card in the user list and send the notification.  
