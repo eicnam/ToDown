@@ -11,7 +11,7 @@ app.service('freebaseService',function($http){
 				console.log("Data received from Freebase");          
 			})
 			.error(function(data, status, headers, config){
-				console.error('Error getting data from Freebase' + data);
+				console.error('Error getting data from Freebase' + JSON.stringify(query));
 			});
 	}
 });
@@ -20,9 +20,9 @@ app.service('freebaseService',function($http){
 // manage all films linked to one user
 app.service('FilmUserService',function($http){
 
-	this.addFilm = function(idFilm){
+	this.addFilm = function(idFilm, releaseDate){
 
-		return $http.post('/films', {"idFilm":idFilm})
+		return $http.post('/films', {"idFilm":idFilm, "release_date": releaseDate})
 			.success(function(data, status, headers, config){
 				if( data == "OK" ) 
 					console.log("postFilm");
@@ -67,6 +67,18 @@ app.service('UserService',function($http){
 		return $http.get('/users')
 			.success(function(response){
 				console.log("getUser");
+			})
+			.error(function(data, status, headers, config) {
+				console.log("Error on getting users info");
+			});
+	}
+
+	//if no parameters, get the current user
+	this.putUser = function(newEmail){
+
+		return $http.put('/users',{"email":newEmail})
+			.success(function(response){
+				console.log("putUser");
 			})
 			.error(function(data, status, headers, config) {
 				console.log("Error on getting users info");

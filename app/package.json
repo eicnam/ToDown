@@ -9,6 +9,7 @@
     "express": "~4.0.0",
     "express-session": "latest",
     "http-server": "^0.6.1",
+    "moment": "^2.9.0",
     "mongoose": "3.8.9",
     "nodemailer": "^1.3.0",
     "passport": "latest",

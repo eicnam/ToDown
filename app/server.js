@@ -8,6 +8,8 @@ var session = require('express-session');
 var mongoose = require('mongoose');
 var nodemailer = require('nodemailer');
 var transporter = nodemailer.createTransport();
+var moment = require('moment');
+moment.locale('fr');
 
 var TWITTER_CONSUMER_KEY = "lcEOKX6CKoE1Csh3gMJKPfsaQ";
 var TWITTER_CONSUMER_SECRET = "bWWM5nifxZjEpnpNfn7K8QIZNYwO7fRlHzSPGqQJfOXW4icNyd";
@@ -148,7 +150,16 @@ router.route('/films')
 		});
 	})
 	.post(auth, function(req, res) {
-		FilmsUsers.update({"id_freebase": req.body.idFilm, "id_user": req.user, "warn_date": "2015-01-15"} ,{"id_freebase":req.body.idFilm}, {upsert: true}, function(err, num) {
+		// we can implement 3 ways to warn the user by adding a "warn_date" in the card.
+		
+		// this is the fourth way to warn the user (3 month after the add)
+		console.log(moment().add(3, 'M').format('L'));
+		//this is the second way 
+		console.log(req.body.release_date + "+ 3 months");
+
+
+
+		FilmsUsers.update({"id_freebase": req.body.idFilm, "id_user": req.user, "warn_date": moment().format('L')} ,{"id_freebase":req.body.idFilm}, {upsert: true}, function(err, num) {
 			if (err)
 				res.send(err);
 			console.log("post film");
@@ -178,47 +189,56 @@ router.route('/users')
 			res.json(docs[0]);
 		});
 	})
+	.put(function(req, res) {
+		/*console.log(req.user);*/
+		/*console.log(req.body.email);*/
+		Users.update({'id_user':req.user},{'id_user':req.user, "email":req.body.email}, function(err,num) {
+			console.log("put user");
+			console.log(num);
+			if (num > 0)
+				res.json('OK');
+			else
+				res.json('KO');
+		});
+	})
+
 
 router.route('/cron')
 	.get(function(req, res) {
-		FilmsUsers.find({'warn_date': '2015-01-15'}, function (err, docs) {
+		FilmsUsers.find({'warn_date': moment().format('L')}, function (err, docs) {
 			if (err)
 				res.send(err);
 			docs.forEach(function(item) { 
-				console.log(item.id_user);
+				console.log(item);
 				Users.find({'id_user': item.id_user}, function (err, docs) {
 					if (err)
 						res.send(err);
-					transporter.sendMail({
-						from: 'blablanumerodeux@gmail.com',
-						to: 'blablanumerodeux@gmail.com',
-						subject: 'hello',
-						text: 'hello world!'
-					},function(error, info){
-						if(error){
-							console.log(error);
-						}else{
-							console.log('Message sent: ' + info.response);
-						}
-					
+					var email = "";
+					Users.find({'id_user': item.id_user}, function (err, docs) {
+						if (err)
+							res.send(err);
+						console.log(docs);
+						email = docs[0].email; 
+						transporter.sendMail({
+							from: 'blablanumerodeux@gmail.com',
+							to: email,// go here to receive the mails : http://www.adresseemailtemporaire.com/inbox/teleworm.us/cnam/
+							subject: 'hello',
+							text: 'hello world!'
+						},function(error, info){
+							if(error){
+								console.log(error);
+							}else{
+								console.log('Message sent: ' + info.response);
+							}
+						
+						});
+						console.log(docs[0]);
 					});
-					console.log(docs[0]);
 				});
 			})
 			res.json(docs);
 		});
 	})
-
-/*.post(function(req, res) {*/
-/*Users.update({"id_user":req.user},{"id_user":req.user},{upsert: true}, function(err,num) {*/
-/*if (err)*/
-/*res.send(err);*/
-/*console.log("post user");*/
-/**//*res.json('User created !');*/
-/*res.redirect("/#/loggedin");*/
-/*});*/
-/*});*/
-
 
 router.route('/')
 	.get(function(req, res) {

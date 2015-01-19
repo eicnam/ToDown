@@ -1,7 +1,7 @@
 'use strict';
 
 app.controller('ToDownCtrl', function($rootScope, $scope, $http, $timeout, $mdSidenav, $mdToast, $log, $location, freebaseFactory) {
-	
+
 	$rootScope.isAuthenticated = false;
 
 	$scope.toggleLeft = function() {
@@ -36,9 +36,10 @@ app.controller('ToDownCtrl', function($rootScope, $scope, $http, $timeout, $mdSi
 app.controller('SearchCtrl', function($rootScope, $scope, $http, FilmUserService) {
 
 	$scope.location = "search";
+	$rootScope.location = "Recherche";
 
-	$scope.addFilm = function(idFilm){
-		FilmUserService.addFilm(idFilm)
+	$scope.addFilm = function(idFilm, release_date){
+		FilmUserService.addFilm(idFilm,release_date)
 			.then(function(objectReturnediByThePromise){
 				if (objectReturnediByThePromise.data == "OK" ) 
 					console.log("Film added");
@@ -54,6 +55,7 @@ app.controller('SearchCtrl', function($rootScope, $scope, $http, FilmUserService
 app.controller('HomeCtrl', function($rootScope, $scope, $http, $mdToast) {
 	
 	$scope.location = "home";
+	$rootScope.location = "Accueil";
 
 	$scope.showSimpleToast = function(content) {
 		$mdToast.show(
@@ -71,6 +73,7 @@ app.controller('HomeCtrl', function($rootScope, $scope, $http, $mdToast) {
 app.controller('ProfileCtrl', function($rootScope, $scope, $http, UserService) {
 
 	$scope.location = "profile";
+	$rootScope.location = "Profile";
 
 	UserService.getUser().then(function(result){
 		console.log("UserInfo : ");
@@ -81,6 +84,17 @@ app.controller('ProfileCtrl', function($rootScope, $scope, $http, UserService) {
 		console.log("Error on getting user");
 	});
 
+	$scope.editProfile = function() {
+		console.log($scope.newEmail);	
+		UserService.putUser($scope.newEmail).then(function(result){
+			console.log("UserInfo : ");
+			console.log(result.data);
+			$scope.userInfo.email = $scope.newEmail;	
+		},
+		function(rejection){
+			console.log("Error on getting user");
+		});
+	};
 });
 
 
@@ -117,6 +131,7 @@ app.controller('LoggedInCtrl', function($rootScope, $scope, $http, $location, Us
 app.controller('FilmsUserCtrl', function($rootScope, $scope, $http, FilmUserService, freebaseFactory) {
 	
 	$scope.location = "filmUser";
+	$rootScope.location = "Mes films";
 
 	FilmUserService.getFilms().then(function(result){
 		console.log(result.data);
