@@ -130,7 +130,6 @@ app.get('/loggedin', function(req, res) {
 
 app.get('/logout', auth, function(req, res){
 	req.logout();
-
 	res.redirect("/#/loggedin");
 	/*if (req.session.returnto == '/#/profile')*/
 	/*res.redirect("/#/");*/
@@ -157,8 +156,6 @@ router.route('/films')
 		//this is the second way 
 		console.log(req.body.release_date + "+ 3 months");
 
-
-
 		FilmsUsers.update({"id_freebase": req.body.idFilm, "id_user": req.user, "warn_date": moment().format('L')} ,{"id_freebase":req.body.idFilm}, {upsert: true}, function(err, num) {
 			if (err)
 				res.send(err);
@@ -180,12 +177,10 @@ router.route('/users')
 	.get(function(req, res) {
 		Users.find({ 'id_user': req.user}, function (err, docs) {
 			// docs is an array
-			/*console.log(docs);*/
 			if (err)
 				res.send(err);
-		/*console.log("user infos : ");*/
-		/*console.log(docs);*/
-		/*console.log(req.user);*/
+			/*console.log("user infos : ");*/
+			/*console.log(docs);*/
 			res.json(docs[0]);
 		});
 	})
@@ -217,7 +212,6 @@ router.route('/cron')
 					Users.find({'id_user': item.id_user}, function (err, docs) {
 						if (err)
 							res.send(err);
-						console.log(docs);
 						email = docs[0].email; 
 						transporter.sendMail({
 							from: 'blablanumerodeux@gmail.com',

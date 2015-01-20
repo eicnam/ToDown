@@ -1,1 +1,25 @@
-<h2>ToDown</h2>
+<h3>Films ajouté récement sur Freebase : </h3>
+
+<div layout="row">
+	<md-card ng-repeat="film in films">
+		<img alt="{{film.name}}" width="230" ng-src="https://www.googleapis.com/freebase/v1/image{{film['/common/topic/image'][0]['id']}}?key=AIzaSyCQVC9yA72POMg2VjiQhSJQQP1nf3ToZTs&maxwidth=230"></img>
+		<h3>{{film.name}}</h3>
+		<p>
+		Date sortie : {{film.initial_release_date}}
+		<br/>
+		Date d'ajout : {{film['/type/object/timestamp']}}
+		<br/>
+		Réalisateur : 
+			<span ng-if="film.directed_by.length > 1" ng-repeat="director in film.directed_by">{{director}}, </span>
+			<span ng-if="film.directed_by.length == 1">{{film.directed_by[0]}}</span>
+		</p>
+		<div ng-if="(location == 'search' || location == 'home') && isAuthenticated">
+			<md-button ng-click="addFilm(film.id, film['/film/film/release_date_s'][0]['release_date'])">Add in my movies</md-button>
+		</div>
+		<div ng-if="location == 'filmUser'">
+			<md-button ng-click="removeFilm(film.id)">Remove from my movies </md-button>
+		</div>
+
+	</md-card>
+</div>
+

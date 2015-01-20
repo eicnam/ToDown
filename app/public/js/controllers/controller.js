@@ -52,7 +52,7 @@ app.controller('SearchCtrl', function($rootScope, $scope, $http, FilmUserService
 });
 
 
-app.controller('HomeCtrl', function($rootScope, $scope, $http, $mdToast) {
+app.controller('HomeCtrl', function($rootScope, $scope, $http, $mdToast, freebaseFactory, FilmUserService) {
 	
 	$scope.location = "home";
 	$rootScope.location = "Accueil";
@@ -67,6 +67,25 @@ app.controller('HomeCtrl', function($rootScope, $scope, $http, $mdToast) {
 
 	if ($rootScope.message != undefined && $rootScope.message != "" )
 		$scope.showSimpleToast($rootScope.message);
+
+	$scope.addFilm = function(idFilm, release_date){
+		FilmUserService.addFilm(idFilm,release_date)
+			.then(function(objectReturnediByThePromise){
+				if (objectReturnediByThePromise.data == "OK" ) 
+					console.log("Film added");
+			})
+			.catch(function(fallback){
+				console.log("Error on adding a film");
+			});
+	}
+	freebaseFactory.getFilmInfoByTimeStamp()
+		.then(function(objectTreatedByTheFactory){
+			console.log(objectTreatedByTheFactory);
+			$scope.films = objectTreatedByTheFactory;
+		})
+		.catch(function(fallback){
+			console.log("error");
+		});
 });
 
 
@@ -134,10 +153,6 @@ app.controller('FilmsUserCtrl', function($rootScope, $scope, $http, FilmUserServ
 	$rootScope.location = "Mes films";
 
 	FilmUserService.getFilms().then(function(result){
-		console.log(result.data);
-		//TODO transforme id_freebase into readable film
-			// do this with a factory ? 
-			// notice that a film should have a id_freebase even after the transformation
 		console.log("mes films");
 		console.log(result.data);
 

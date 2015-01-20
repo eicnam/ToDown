@@ -43,3 +43,9 @@ One of the features we really want to add is a reminder when a movie is now avai
 - An other way is to wait 3 months (or more) after the theater release and warn the user.  
 - The user can also trigger himself the scan for new releases
 - And finaly, you can wait 3 months after the add of the card in the user list and send the notification.  
+
+## How to trigger the "send email when release" functionality
+
+Just put this in your crontab (crontab -e)  
+
+curl http://localhost:8080/cron
