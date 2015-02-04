@@ -5,11 +5,13 @@
 		<title>ToDown</title>
 
 		<link rel="stylesheet" href="bower_components/angular-material/angular-material.css">
+		<link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
 		<link rel="stylesheet" href="css/style.css">
 		<!--<link rel="stylesheet" href="//rawgit.com/angular/bower-material/master/angular-material.css">-->
 
 		<script src="bower_components/hammerjs/hammer.js"></script>
 		<script src="bower_components/angular/angular.js"></script>
+		<script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.12.0.js"></script>
 		<script src="bower_components/angular-resource/angular-resource.js"></script>
 		<script src="bower_components/angular-route/angular-route.js"></script>
 		<!--<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.0/angular-animate.js"></script>	-->
@@ -55,13 +57,26 @@
 					</md-toolbar>
 					<md-content>
 						<div layout="column" layout-fill>
-								<!--possible classes : menu-sub-item md-menu-item ng-scope"-->
-								<md-button ng-if="isAuthenticated" ng-click="closeLeft()" class="menu-item" href="#/films" flex>
-									Mes films
+								<md-button ng-if="isAuthenticated" ng-click="closeLeft()" class="menu-item" flex>
+									Menu
 								</md-button>
-								<md-button ng-if="isAuthenticated" href="/logout" class="menu-item" flex>
+								<md-button ng-if="isAuthenticated" ng-click="closeLeft(); createList()" class="menu-sub-item " >
+									Créer une liste
+								</md-button>
+								<md-button ng-if="isAuthenticated" href="/logout" class="menu-sub-item" flex>
 									Déconnexion
 								</md-button>
+								<!--possible classes : menu-sub-item md-menu-item ng-scope"-->
+								<md-button ng-if="isAuthenticated" ng-click="closeLeft()" class="menu-item" flex>
+									Listes	
+								</md-button>
+								<md-button  ng-repeat="list in lists" ng-if="isAuthenticated" ng-click="closeLeft()" class="menu-sub-item " href="#/list/{{list._id}}" >
+									{{list.name}} 
+
+								</md-button>
+								<!--<md-button ng-if="isAuthenticated" ng-click="closeLeft()" class="menu-sub-item " href="#/list/1" >-->
+								<!--Liste collaborative	-->
+								<!--</md-button>-->
 						</div>
 					</md-content>
 				</md-sidenav>

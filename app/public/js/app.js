@@ -3,7 +3,8 @@
 var app = angular.module('toDownApp', [
   'ngRoute',
   'ngMaterial',
-  'ngResource'
+  'ngResource',
+  'ui.bootstrap'
 ]);
 
 app.config(function($routeProvider, $locationProvider, $httpProvider) {
@@ -80,6 +81,14 @@ app.config(function($routeProvider, $locationProvider, $httpProvider) {
 	.when('/films', {
 		templateUrl: 'views/partials/gridFilms.html',
 		controller: 'FilmsUserCtrl',
+		//this is a secure root
+		resolve: {
+			loggedin: checkLoggedin
+		}
+	})
+	.when('/list/:idList', {
+		templateUrl: 'views/partials/gridFilms.html',
+		controller: 'FilmsListsCtrl',
 		//this is a secure root
 		resolve: {
 			loggedin: checkLoggedin

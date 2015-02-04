@@ -40,8 +40,17 @@ mongoose.connect('mongodb://todown:todown@ds029901.mongolab.com:29901/todown', f
 require('./models/User');
 require('./models/Film');
 
+require('./models/FilmList');
+require('./models/List');
+require('./models/ListUser');
+
 var Users = mongoose.model('Users');
 var FilmsUsers = mongoose.model('FilmsUsers');
+
+var FilmsLists = mongoose.model('FilmsLists');
+var Lists = mongoose.model('Lists');
+var ListsUsers = mongoose.model('ListsUsers');
+
 
 passport.use( new TwitterStrategy({
 	consumerKey: TWITTER_CONSUMER_KEY,
@@ -138,6 +147,8 @@ app.get('/logout', auth, function(req, res){
 });
 
 // RESTFUL API
+
+// FILMS OLD API !!
 router.route('/films')
 	.get(auth, function(req, res) {
 		FilmsUsers.find({ 'id_user': req.user }, function (err, docs) {
@@ -173,16 +184,160 @@ router.route('/films')
 		});
 	});
 
-router.route('/users')
-	.get(function(req, res) {
-		Users.find({ 'id_user': req.user}, function (err, docs) {
+
+// LISTSUSERS
+router.route('/lists_users')
+	.get(auth, function(req, res) {
+		ListsUsers.find({ 'id_user': req.user }, function (err, docs) {
 			// docs is an array
+			/*console.log(docs);*/
 			if (err)
 				res.send(err);
-			/*console.log("user infos : ");*/
-			/*console.log(docs);*/
-			res.json(docs[0]);
+			res.json(docs);
 		});
+	})
+	.post(auth, function(req, res) {
+		console.log("ID_USER ou pas : ");
+		console.log(req.body);
+		if (req.body.id_user == undefined){
+			ListsUsers.update({"id_user": req.user, "id_list":req.body.id_list} ,{"id_user": req.user, "id_list":req.body.id_list}, {upsert: true}, function(err, num) {
+				if (err)
+					res.send(err);
+				console.log("post listuser");
+				res.json('OK');
+			});
+		}else{
+			ListsUsers.update({"id_user": req.body.id_user, "id_list":req.body.id_list} ,{"id_user": req.body.id_user, "id_list":req.body.id_list}, {upsert: true}, function(err, num) {
+				if (err)
+					res.send(err);
+				console.log("post listuser");
+				res.json('OK');
+			});
+		}
+
+	})
+	.put(auth, function(req, res) {
+		ListsUsers.remove({"id_list":req.body.idList, "id_user":req.user}, function(err, num) {
+			if (err)
+				res.send(err);
+			console.log("delete listuser");
+			res.json('OK');
+		});
+	});
+
+
+
+// LISTS
+router.route('/lists')
+	.get(auth, function(req, res) {
+		console.log(req.query);
+		if (req.query.id_list != undefined){
+			Lists.find({'_id': req.query.id_list}, function (err, docs) {
+				if (err)
+					res.send(err);
+				console.log('getting a specific list');
+				console.log(docs[0]);
+				res.json(docs[0]);
+			});
+		}else{
+
+			ListsUsers.find({ 'id_user': req.user }, function (err, docs) {
+				// docs is an array
+				console.log('getting all the lists of a user');
+				console.log(docs);
+				if (err)
+					res.send(err);
+				var listsUser = new Array();
+				docs.forEach(function(item) { 
+					Lists.findById(item.id_list, function (err, list) {
+						console.log('getting a list number '+item.id_list);
+						listsUser.push(list);
+						console.log(listsUser);
+					});
+				});
+				console.log(listsUser);
+				res.json(listsUser);
+			});
+		}
+	})
+	.post(auth, function(req, res) {
+		console.log(req.body);
+		Lists.update({'name':req.body.name}, {'name':req.body.name}, {upsert: true}, function(err, num, raw) {
+			if (err)
+				res.send(err);
+			console.log("post list");
+			res.json(raw.upserted[0]);
+		});
+	})
+	.put(auth, function(req, res) {
+		Lists.remove({"_id": req.body.idList}, function(err, num) {
+			if (err)
+				res.send(err);
+			console.log("delete list");
+			res.json('OK');
+		});
+	});
+
+
+
+// FILMSLISTS
+router.route('/films_lists')
+	.get(auth, function(req, res) {
+		console.log("/films_lists :"+ req.query);
+		console.log(req.query.id_list);
+		FilmsLists.find({ 'id_list': req.query.id_list}, function (err, docs) {
+			console.log(docs);
+			if (err)
+				res.send(err);
+			res.json(docs);
+		});
+	})
+	.post(auth, function(req, res) {
+		console.log(req.body);
+		/*req.body.release_date}*/
+		FilmsLists.update({"id_list": req.body.idList, "id_freebase": req.body.idFilm, "warn_date":moment().format('L')} ,{"id_list": req.body.idList, "id_freebase":req.body.idFilm, "warn_date":req.body.warn_date}, {upsert: true}, function(err, num) {
+			if (err)
+				res.send(err);
+			console.log("post film list");
+			res.json('OK');
+		});
+	})
+	.put(auth, function(req, res) {
+		console.log("removing a film list");
+		console.log(req.body);
+		FilmsLists.remove({"id_list":req.body.idList, "id_freebase":req.body.idFilm}, function(err, num) {
+			if (err)
+				res.send(err);
+			console.log("delete film list");
+			res.json('OK');
+		});
+	});
+
+
+
+// USERS 
+router.route('/users')
+	.get(function(req, res) {
+		console.log(req.query);
+		if (req.query.all == 'true') {
+			Users.find({}, function (err, docs) {
+				// docs is an array
+				if (err)
+					res.send(err);
+				console.log("ALL the user infos : ");
+				console.log(docs);
+				res.json(docs);
+			});
+		}else{
+			Users.find({ 'id_user': req.user}, function (err, docs) {
+				// docs is an array
+				if (err)
+					res.send(err);
+				/*console.log("user infos : ");*/
+				/*console.log(docs);*/
+				res.json(docs[0]);
+			});
+		}
 	})
 	.put(function(req, res) {
 		/*console.log(req.user);*/
@@ -198,35 +353,43 @@ router.route('/users')
 	})
 
 
+// CRON
 router.route('/cron')
 	.get(function(req, res) {
-		FilmsUsers.find({'warn_date': moment().format('L')}, function (err, docs) {
+		FilmsLists.find({'warn_date': moment().format('L')}, function (err, docs) {
 			if (err)
 				res.send(err);
 			docs.forEach(function(item) { 
-				console.log(item);
-				Users.find({'id_user': item.id_user}, function (err, docs) {
+				ListsUsers.find({ 'id_list': item.id_list}, function (err, lists) {
 					if (err)
 						res.send(err);
-					var email = "";
-					Users.find({'id_user': item.id_user}, function (err, docs) {
-						if (err)
-							res.send(err);
-						email = docs[0].email; 
-						transporter.sendMail({
-							from: 'blablanumerodeux@gmail.com',
-							to: email,// go here to receive the mails : http://www.adresseemailtemporaire.com/inbox/teleworm.us/cnam/
-							subject: 'hello',
-							text: 'hello world!'
-						},function(error, info){
-							if(error){
-								console.log(error);
-							}else{
-								console.log('Message sent: ' + info.response);
-							}
-						
+					console.log(lists);
+					lists.forEach(function(item) { 
+						console.log(item);
+						Users.find({'id_user': item.id_user}, function (err, docs) {
+							if (err)
+								res.send(err);
+							var email = "";
+							Users.find({'id_user': item.id_user}, function (err, docs) {
+								if (err)
+									res.send(err);
+								email = docs[0].email; 
+								transporter.sendMail({
+									from: 'blablanumerodeux@gmail.com',
+									to: email,// go here to receive the mails : http://www.adresseemailtemporaire.com/inbox/teleworm.us/cnam/
+									subject: 'hello',
+									text: 'hello world!'
+								},function(error, info){
+									if(error){
+										console.log(error);
+									}else{
+										console.log('Message sent: ' + info.response);
+									}
+								
+								});
+								console.log(docs[0]);
+							});
 						});
-						console.log(docs[0]);
 					});
 				});
 			})
@@ -234,6 +397,8 @@ router.route('/cron')
 		});
 	})
 
+
+// /
 router.route('/')
 	.get(function(req, res) {
 		//her we send the home page

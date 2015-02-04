@@ -1,0 +1,20 @@
+
+<md-dialog aria-label="Create list">
+        <md-content class="large-Modal">
+                <h3>Add to list</h3>
+		<!--<md-text-float label="id de la liste" ng-model="listToAddIn"></md-text-float>-->
+		<!--</ br> -->
+		<input type="text" ng-model="listToAddIn" typeahead="list as list.name for list in lists" class="form-control">
+
+		<!--{{lists}}-->
+        </md-content>
+        <div class="md-actions" layout="row">
+                <span flex></span>
+                <md-button ng-click="addToList(false)">
+                        Annuler
+                </md-button>
+                <md-button ng-click="addToList(true)" class="md-primary">
+                        Creer
+                </md-button>
+        </div>
+</md-dialog>

@@ -12,11 +12,12 @@ app.factory('freebaseFactory', function(freebaseService){
 			"name": null,
 			"directed_by": [],
 			"initial_release_date": null,
+			"sort": "-initial_release_date",
 			"/film/film/release_date_s": [{
 				"release_date": null,
 				"film_release_region": [], 
-				"film_release_distribution_medium": [],
-				"sort": "release_date"
+				"film_release_distribution_medium": []
+/*"sort": "release_date"*/
 				}],
 			"type": "/film/film"
 		}],
@@ -26,8 +27,11 @@ app.factory('freebaseFactory', function(freebaseService){
 			factory.query[0]['name~='] = searchedWord+"*";
 			factory.query[0]['id'] = null;
 			delete factory.query[0]["/type/object/timestamp"];
-			delete factory.query[0]["sort"];
+			/*delete factory.query[0]["sort"];*/
+			factory.query[0]["sort"] = "-initial_release_date";
 			delete factory.query[0]["limit"];
+
+			console.log(factory.query[0]);
 
 			return freebaseService.lookup(factory.query)
 				.then(function(dataReturnByThePromise) {
@@ -40,7 +44,8 @@ app.factory('freebaseFactory', function(freebaseService){
 			factory.query[0]['id'] = id_freebase;
 			factory.query[0]['name~='] = "*";
 			delete factory.query[0]["/type/object/timestamp"];
-			delete factory.query[0]["sort"];
+			/*delete factory.query[0]["sort"];*/
+			factory.query[0]["sort"] = "-initial_release_date";
 			delete factory.query[0]["limit"];
 
 			/*console.log(factory.query);*/

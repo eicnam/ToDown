@@ -1,0 +1,21 @@
+<md-dialog aria-label="Create list">
+	<md-content class="large-Modal">
+		<h3>Create List</h3>
+		<md-text-float label="Nom de la list" ng-model="list.name"></md-text-float>
+		</ br>
+		<md-checkbox ng-model="list.collaborative" aria-label="collaborative">
+			Collabrative
+		</md-checkbox>
+		<input ng-if="list.collaborative" type="text" ng-model="list.listIdUserSharedWith" typeahead="user as user.displayName for user in users" class="form-control">
+		<p ng-if="list.collaborative">partager avec : {{list.listIdUserSharedWith}}</p>
+	</md-content>
+	<div class="md-actions" layout="row">
+		<span flex></span>
+		<md-button ng-click="answer(false)">
+			Annuler
+		</md-button>
+		<md-button ng-click="answer(true)" class="md-primary">
+			Creer
+		</md-button>
+	</div>
+</md-dialog>
