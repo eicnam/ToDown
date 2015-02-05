@@ -32,7 +32,8 @@ app.use(passport.session());
 mongoose.connect('mongodb://todown:todown@ds029901.mongolab.com:29901/todown', function(err) {
 	if (err){
 		console.log("ERROR while connecting the database");
-		throw err;
+		/*throw err;*/
+		/*exit(0);*/
 	}
 });
 
@@ -197,8 +198,8 @@ router.route('/lists_users')
 		});
 	})
 	.post(auth, function(req, res) {
-		console.log("ID_USER ou pas : ");
-		console.log(req.body);
+		/*console.log("ID_USER ou pas : ");*/
+		/*console.log(req.body);*/
 		if (req.body.id_user == undefined){
 			ListsUsers.update({"id_user": req.user, "id_list":req.body.id_list} ,{"id_user": req.user, "id_list":req.body.id_list}, {upsert: true}, function(err, num) {
 				if (err)
@@ -210,7 +211,7 @@ router.route('/lists_users')
 			ListsUsers.update({"id_user": req.body.id_user, "id_list":req.body.id_list} ,{"id_user": req.body.id_user, "id_list":req.body.id_list}, {upsert: true}, function(err, num) {
 				if (err)
 					res.send(err);
-				console.log("post listuser");
+				console.log("post listuser : add a list to a specified user ");
 				res.json('OK');
 			});
 		}
@@ -232,30 +233,30 @@ router.route('/lists')
 	.get(auth, function(req, res) {
 		console.log(req.query);
 		if (req.query.id_list != undefined){
+			console.log('getting a specific list');
 			Lists.find({'_id': req.query.id_list}, function (err, docs) {
 				if (err)
 					res.send(err);
-				console.log('getting a specific list');
 				console.log(docs[0]);
 				res.json(docs[0]);
 			});
 		}else{
 
+			console.log('getting all the lists of a user');
 			ListsUsers.find({ 'id_user': req.user }, function (err, docs) {
 				// docs is an array
-				console.log('getting all the lists of a user');
 				console.log(docs);
 				if (err)
 					res.send(err);
 				var listsUser = new Array();
 				docs.forEach(function(item) { 
+					console.log('getting a specific list (for a join)');
 					Lists.findById(item.id_list, function (err, list) {
-						console.log('getting a list number '+item.id_list);
 						listsUser.push(list);
 						console.log(listsUser);
 					});
 				});
-				console.log(listsUser);
+				/*console.log(listsUser);*/
 				res.json(listsUser);
 			});
 		}
@@ -266,7 +267,10 @@ router.route('/lists')
 			if (err)
 				res.send(err);
 			console.log("post list");
-			res.json(raw.upserted[0]);
+			if (raw.upserted != undefined) 
+				res.json(raw.upserted[0]);
+			else 
+				res.json(raw);
 		});
 	})
 	.put(auth, function(req, res) {
@@ -283,12 +287,13 @@ router.route('/lists')
 // FILMSLISTS
 router.route('/films_lists')
 	.get(auth, function(req, res) {
-		console.log("/films_lists :"+ req.query);
-		console.log(req.query.id_list);
+		/*console.log("/films_lists :"+ req.query);*/
+		/*console.log(req.query.id_list);*/
 		FilmsLists.find({ 'id_list': req.query.id_list}, function (err, docs) {
-			console.log(docs);
 			if (err)
 				res.send(err);
+			console.log('get film list');
+			/*console.log(docs);*/
 			res.json(docs);
 		});
 	})
@@ -321,19 +326,17 @@ router.route('/users')
 		console.log(req.query);
 		if (req.query.all == 'true') {
 			Users.find({}, function (err, docs) {
-				// docs is an array
 				if (err)
 					res.send(err);
-				console.log("ALL the user infos : ");
-				console.log(docs);
+				console.log("get ALL users");
+				/*console.log(docs);*/
 				res.json(docs);
 			});
 		}else{
 			Users.find({ 'id_user': req.user}, function (err, docs) {
-				// docs is an array
 				if (err)
 					res.send(err);
-				/*console.log("user infos : ");*/
+				console.log("get user");
 				/*console.log(docs);*/
 				res.json(docs[0]);
 			});
@@ -356,15 +359,18 @@ router.route('/users')
 // CRON
 router.route('/cron')
 	.get(function(req, res) {
+		console.log('getting all the films with a warn_date equals to today');
 		FilmsLists.find({'warn_date': moment().format('L')}, function (err, docs) {
 			if (err)
 				res.send(err);
 			docs.forEach(function(item) { 
+				console.log('getting the lists corresponding ');
 				ListsUsers.find({ 'id_list': item.id_list}, function (err, lists) {
 					if (err)
 						res.send(err);
 					console.log(lists);
 					lists.forEach(function(item) { 
+						console.log('getting the user corresponding ');
 						console.log(item);
 						Users.find({'id_user': item.id_user}, function (err, docs) {
 							if (err)

@@ -32,34 +32,35 @@ app.controller('ToDownCtrl', function($rootScope, $scope, $http, $timeout, $mdSi
 	};
 
 	$scope.createList = function() {
-		console.log("createlist");
+		/*console.log("createlist");*/
 		$mdDialog.show({
 			controller: DialogController,
 			templateUrl: '../../views/partials/createListForm.tpl.html'
 		})
 		.then(function(answer) {
-			console.log("apres cereatiuon de liste");
-			console.log($scope);
+			/*console.log("apres cereatiuon de liste");*/
+			/*console.log($scope);*/
 			$scope.getAllListsOfTheUser();
 		}, function() {
-			console.log('error');
+			console.log('error when creating a list');
 		});
 	};
 
 	
 	$scope.getAllListsOfTheUser = function() {
+		console.log("getting all the lists of the user connected");
 		ListsUsersService.getlistuser()
 			.then(function(objectReturnediByThePromise){
-				console.log("listuser get");
-				console.log(objectReturnediByThePromise);
+				/*console.log(objectReturnediByThePromise);*/
 
 				$scope.lists = new Array();
 				angular.forEach(objectReturnediByThePromise.data, function(listuser) {
+					console.log("getting the name of a list");
 					ListsService.getlists(listuser.id_list)
 						.then(function(listsReturned){
-							console.log("un autre retour");
+							/*console.log("un autre retour");*/
 							$scope.lists.push(listsReturned.data);
-							console.log(listsReturned);
+							/*console.log(listsReturned);*/
 						})
 						.catch(function(fallback){
 							console.log("Error on getting lists");
@@ -85,19 +86,19 @@ function DialogController($scope, $mdDialog, ListsService, ListsUsersService, Fi
 	
 	$scope.list = {collaborative : false};
 	$scope.answer = function(answer) {
-		console.log($scope.list.listIdUserSharedWith);
+		/*console.log($scope.list.listIdUserSharedWith);*/
 		$mdDialog.hide(answer);
 		if (answer == true) {
-			console.log($scope.list.listIdUserSharedWith);
+			/*console.log($scope.list.listIdUserSharedWith);*/
 			/*$scope.list.listIdUserSharedWith = $scope.listIdUserSharedWith.id_user;*/
 			/*console.log($scope.list);*/
 			ListsService.addlist($scope.list.name, $scope.list.collaborative, $scope.list.listIdUserSharedWith.id_user)
 				.then(function(objectReturnediByThePromise){
-					console.log("list added");
-					console.log(objectReturnediByThePromise);
+					console.log("list created");
+					/*console.log(objectReturnediByThePromise);*/
 					ListsUsersService.addlistuser(objectReturnediByThePromise.data._id)
 						.then(function(objectReturnediByThePromise){
-							console.log("listuser added");
+							console.log("list added to the user connected");
 							console.log(objectReturnediByThePromise);
 						})
 						.catch(function(fallback){
@@ -109,7 +110,7 @@ function DialogController($scope, $mdDialog, ListsService, ListsUsersService, Fi
 						/*angular.forEach($scope.list.listIdUserSharedWith, function(user) {*/
 						ListsUsersService.sharelistuser(objectReturnediByThePromise.data._id, $scope.list.listIdUserSharedWith.id_user)
 							.then(function(objectReturnediByThePromise){
-								console.log("listuser added");
+								console.log("list added to the other user we share with");
 								console.log(objectReturnediByThePromise);
 							})
 							.catch(function(fallback){
@@ -124,8 +125,12 @@ function DialogController($scope, $mdDialog, ListsService, ListsUsersService, Fi
 	};
 
 	$scope.addToList = function(answer) {
-		console.log($scope.listToAddIn);
-		$mdDialog.hide($scope.listToAddIn._id);
+		/*console.log($scope.listToAddIn);*/
+		if ($scope.listToAddIn != undefined)
+			$mdDialog.hide($scope.listToAddIn._id);
+		else
+			$mdDialog.hide();
+			
 			/*FilmUserService.addFilm(idFilm,release_date)*/
 			/*.then(function(objectReturnediByThePromise){*/
 			/*if (objectReturnediByThePromise.data == "OK" ) */
@@ -137,32 +142,32 @@ function DialogController($scope, $mdDialog, ListsService, ListsUsersService, Fi
 	};
 
 	//fill combobox of users 
+	console.log("getting all the users");
 	UserService.getUser(true).then(function(result){
-		console.log("users: ");
-		console.log(result.data);
+		/*console.log(result.data);*/
 		$scope.users= result.data;	
 	},
 	function(rejection){
-		console.log("Error on getting user");
+		console.log("Error on getting all user");
 	});
 
 	//fill combobox of lists
+	console.log("getting all the lists of the user");
 	ListsUsersService.getlistuser()
 		.then(function(objectReturnediByThePromise){
-			console.log("listuser get");
-			console.log(objectReturnediByThePromise);
+			/*console.log(objectReturnediByThePromise);*/
 
 			$scope.lists = new Array();
 			angular.forEach(objectReturnediByThePromise.data, function(listuser) {
+				console.log("getting the name of a list");
 				ListsService.getlists(listuser.id_list)
 					.then(function(listsReturned){
-						console.log("un autre retour");
 						$scope.lists.push(listsReturned.data);
-						console.log(listsReturned);
+						/*console.log(listsReturned);*/
 						/*$scope.lists = ['Alabama', 'Alaska', 'Arizona'];*/
 					})
 					.catch(function(fallback){
-						console.log("Error on getting lists");
+						console.log("Error on getting a list");
 					});
 			});
 		})
@@ -198,24 +203,6 @@ app.controller('SearchCtrl', function($rootScope, $scope, $http, FilmUserService
 			console.log('error');
 		});
 	}
-
-	/*$scope.shareFilm = function(idFilm, idFilmList, initial_release_date){*/
-	/*console.log("partage de film");*/
-	/*console.log(initial_release_date);*/
-	/*console.log(idFilm);*/
-	/*console.log(idFilmList);*/
-	/**//*idFilmList = "1";*/
-
-	/*FilmsListsService.addFilmsList(idFilm, idFilmList, initial_release_date)*/
-	/*.then(function(objectReturnediByThePromise){*/
-	/*if (objectReturnediByThePromise.data == "OK" ) */
-	/*console.log("Film shared");*/
-	/*})*/
-	/*.catch(function(fallback){*/
-	/*console.log("Error on adding a filmlist");*/
-	/*});*/
-	/*}*/
-
 });
 
 
@@ -263,8 +250,8 @@ app.controller('ProfileCtrl', function($rootScope, $scope, $http, UserService) {
 	$rootScope.location = "Profile";
 
 	UserService.getUser().then(function(result){
-		console.log("UserInfo : ");
-		console.log(result.data);
+		console.log("UserInfo");
+		/*console.log(result.data);*/
 		$scope.userInfo = result.data;	
 	},
 	function(rejection){
@@ -274,8 +261,8 @@ app.controller('ProfileCtrl', function($rootScope, $scope, $http, UserService) {
 	$scope.editProfile = function() {
 		console.log($scope.newEmail);	
 		UserService.putUser($scope.newEmail).then(function(result){
-			console.log("UserInfo : ");
-			console.log(result.data);
+			console.log("UserInfo edited");
+			/*console.log(result.data);*/
 			$scope.userInfo.email = $scope.newEmail;	
 		},
 		function(rejection){
@@ -291,7 +278,7 @@ app.controller('LoggedInCtrl', function($rootScope, $scope, $http, $location, Us
 
 	// Make an AJAX call to check if the user is logged in
 	$http.get('/loggedin').success(function(data, status, headers, config){
-		console.log(data);
+		/*console.log(data);*/
 		// Authenticated
 		if (data.user!== '0'){
 			$rootScope.isAuthenticated = true;
@@ -373,9 +360,9 @@ app.controller('FilmsListsCtrl', function($rootScope, $routeParams, $scope, $htt
 	$scope.location = "filmList";
 	$rootScope.location = $routeParams.idList;
 
+	console.log("getting all the films in a list...");
 	FilmsListsService.getFilmList($routeParams.idList).then(function(result){
-		console.log("list");
-		console.log($routeParams);
+		/*console.log($routeParams);*/
 		console.log(result.data);
 
 		$scope.films =  [];
@@ -387,11 +374,11 @@ app.controller('FilmsListsCtrl', function($rootScope, $routeParams, $scope, $htt
 					/*console.log(objectTreatedByTheFactory);*/
 					$scope.films.push(objectTreatedByTheFactory[0]);
 
-					console.log("films apres fabrique");
+					console.log("film after rebuilding with the factory");
 					console.log($scope.films);
 				})
 				.catch(function(fallback){
-					console.log("error");
+					console.log("error on reconstructing the film with the factory");
 				});
 		});
 	},
